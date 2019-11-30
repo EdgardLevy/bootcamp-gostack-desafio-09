@@ -7,6 +7,7 @@ export const Wrapper = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
+  overflow: auto;
 `;
 export const Content = styled.div`
   width: 100%;
@@ -40,7 +41,7 @@ export const Content = styled.div`
       border-radius: 4px;
       height: 44px;
       padding: 0 15px;
-      color: #fff;
+      /*color: #fff;*/
       margin: 0 0 10px;
       /*
       &::placeholder {

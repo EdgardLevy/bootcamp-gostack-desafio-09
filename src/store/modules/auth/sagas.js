@@ -9,9 +9,10 @@ export function* singIn({payload}) {
     const {email, password} = payload;
 
     const response = yield call(api.post, 'sessions', {email, password});
+    console.tron.log(response);
     const {token, user} = response.data;
-    if (!user.provider) {
-      toast.error('Usuário não é prestador');
+    if (!user) {
+      toast.error('Usuário e/ou senha inválidos');
       return;
     }
 
@@ -22,6 +23,7 @@ export function* singIn({payload}) {
     history.push('/dashboard');
   } catch (error) {
     toast.error('Falha na autenticação, verifique seus dados');
+    console.tron.log(error);
     yield put(signFailure());
   }
 }

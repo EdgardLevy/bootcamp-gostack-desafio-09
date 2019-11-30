@@ -14,14 +14,21 @@ export const Content = styled.div`
   nav {
     display: flex;
     align-items: center;
-    img {
+    span {
+      color: #ee4d64;
+      font-weight: bold;
       margin-right: 20px;
       padding-right: 20px;
       border-right: 1px solid #eee;
     }
+    img {
+      margin-right: 20px;
+      height: 24px;
+    }
     a {
       font-weight: bold;
-      color: #7159c1;
+      color: #999;
+      margin-right: 20px;
     }
   }
 
