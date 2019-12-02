@@ -6,7 +6,7 @@ import Route from './Route';
 import SingIn from '~/pages/SingIn';
 import SingUp from '~/pages/SingUp';
 import Dashboard from '~/pages/Dashboard';
-import Profile from '~/pages/Profile';
+import Students from '~/pages/Students';
 
 export default function Routes() {
   return (
@@ -14,7 +14,7 @@ export default function Routes() {
       <Route path="/" exact component={SingIn} />
       <Route path="/register" component={SingUp} />
       <Route path="/dashboard" component={Dashboard} isPrivate />
-      <Route path="/profile" component={Profile} isPrivate />
+      <Route path="/students" component={Students} isPrivate />
       {/** Exemplo de rota de 404
       <Route path="/" component={() => <h1>404</h1>} />
        */}

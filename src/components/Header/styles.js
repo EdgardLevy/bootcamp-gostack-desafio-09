@@ -49,16 +49,13 @@ export const Profile = styled.div`
       display: block;
       color: #333;
     }
-    a {
+    button {
       display: block;
       margin-top: 2px;
-      font-size: 12px;
-      color: #999;
+      font-size: 14px;
+      color: #ee4d64;
+      border: none;
+      background: none;
     }
-  }
-  img {
-    height: 32px;
-    width: 32px;
-    border-radius: 50%;
   }
 `;
