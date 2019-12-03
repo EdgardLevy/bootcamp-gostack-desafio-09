@@ -1,30 +1,56 @@
 import styled from 'styled-components';
+import {darken} from 'polished';
 
 export const Container = styled.div`
-  background: blue;
   max-width: 1200px;
   margin: 50px auto;
-  display: flex;
-  flex-direction: column;
 
   header {
     display: flex;
-    padding: 30px;
+    padding: 15px 0;
     justify-content: space-between;
 
     strong {
-      color: #fff;
       font-size: 24px;
     }
 
-    button {
-      padding: 5px;
-      border: 0;
-      border-radius: 4px;
-      font-size: 16px;
-      color: #fff;
-      background: #ee4d64;
-      font-weight: bold;
+    div {
+      display: flex;
+    }
+  }
+
+  table {
+    border-radius: 4px;
+    width: 100%;
+    padding: 30px;
+    background: #fff;
+    line-height: 20px;
+    font-size: 16px;
+    .center {
+      text-align: center;
+    }
+    .edit {
+      color: blue;
+    }
+    .delete {
+      color: red;
+    }
+    thead {
+      tr {
+        th {
+          text-align: left;
+          font-weight: bold;
+        }
+      }
+    }
+
+    tr {
+      height: 40px;
+      & + tr {
+        td {
+          border-top: 1px solid #eee;
+        }
+      }
     }
   }
 `;
