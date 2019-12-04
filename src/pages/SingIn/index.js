@@ -23,10 +23,18 @@ export default function SingIn() {
     <>
       <Form schema={schema} onSubmit={handleSubmit}>
         <img src={logo} alt="GymPoint" />
-        <label htmlFor="email">SEU E-MAIL</label>
-        <Input name="email" type="email" placeholder="exemplo@gmail.com.br" />
-        <label htmlFor="password">SUA SENHA</label>
-        <Input name="password" type="password" placeholder="**********" />
+        <Input
+          name="email"
+          type="email"
+          placeholder="exemplo@gmail.com.br"
+          label="SEU E-MAIL"
+        />
+        <Input
+          name="password"
+          type="password"
+          placeholder="**********"
+          label="SUA SENHA"
+        />
         <button type="submit">
           {loading ? 'Carregando...' : 'Entrar no sistema'}{' '}
         </button>
