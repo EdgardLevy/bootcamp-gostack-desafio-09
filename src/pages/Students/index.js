@@ -9,20 +9,32 @@ import {newStudent} from '~/store/modules/student/actions';
 
 export default function Students(props) {
   const dispatch = useDispatch();
-
+  const student = useSelector(state => state.student);
   // console.tron.log(props);
   const [students, setStudents] = useState([]);
   const [searchText, setSearchText] = useState('');
   const [action, setAction] = useState('list');
 
+  async function loadStudents() {
+    const response = await api.get('students', {params: {q: searchText}});
+    const {data} = response;
+    setStudents(data);
+  }
   useEffect(() => {
-    async function loadStudents() {
-      const response = await api.get('students', {params: {q: searchText}});
-      const {data} = response;
-      setStudents(data);
-    }
     loadStudents();
-  }, [searchText]);
+  }, [searchText]);//eslint-disable-line
+
+  useEffect(() => {
+    console.tron.log('useEffect student');
+    const {requestStatus} = student;
+
+    if (requestStatus === 'success') {
+      setAction('list');
+      loadStudents();
+    }
+
+    console.tron.log(student);
+  }, [student]);//eslint-disable-line
 
   function handleBtnNewStudentClick() {
     setAction('new');

@@ -9,6 +9,7 @@ const INITIAL_STATE = {
     weight: null,
     height: null,
   },
+  requestStatus: null,
   loading: false,
 };
 
@@ -23,22 +24,25 @@ export default function student(state = INITIAL_STATE, action) {
 
       case '@student/NEW_STUDENT': {
         draft.fields = {...INITIAL_STATE.fields};
+        draft.requestStatus = INITIAL_STATE.requestStatus;
 
         break;
       }
 
-      case '@student/REQUEST': {
+      case '@student/SAVE': {
         draft.loading = true;
         break;
       }
 
-      case '@student/REQUEST_SUCCESS': {
+      case '@user/SAVE_STUDENT_SUCCESS': {
         draft.loading = false;
+        draft.requestStatus = 'success';
         break;
       }
 
-      case '@student/REQUEST_FAILURE': {
+      case '@user/SAVE_STUDENT_FAILURE': {
         draft.loading = false;
+        draft.requestStatus = 'failure';
         break;
       }
 
