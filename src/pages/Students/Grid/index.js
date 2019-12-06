@@ -1,22 +1,44 @@
-import React, {useState, useEffect} from 'react';
-import {MdAdd} from 'react-icons/md';
-import {Link} from 'react-router-dom';
+import React, { useState, useEffect, useCallback } from 'react';
+import { MdAdd, MdKeyboardArrowLeft, MdKeyboardArrowRight } from 'react-icons/md';
+import { Link } from 'react-router-dom';
 import history from '~/services/history';
-import {Container} from '../styles';
-import {PrimaryButton} from '~/components/Button';
+import { Container } from '../styles';
+import { PrimaryButton, SecondaryButton } from '~/components/Button';
 import api from '~/services/api';
 
-export default function Grid() {
-  const [students, setStudents] = useState([]);
+let tmrDebounceEvent = null;
 
-  async function loadStudents(searchText = '') {
-    const response = await api.get('students', {params: {q: searchText}});
-    const {data} = response;
-    setStudents(data);
+export default function Grid() {
+  const [searchText, setSearchText] = useState('');
+  const [data, setData] = useState({ records: [] });
+  const [hasPrevPage, setHasPrevPage] = useState(false);
+  const [hasNextPage, setHasNextPage] = useState(false);
+  const [page, setPage] = useState(1);
+
+  const [limit, setLimit] = useState(3);
+
+  function debounce(event, param, ms) {
+    console.tron.log('debounce');
+    if (tmrDebounceEvent) clearTimeout(tmrDebounceEvent);
+    tmrDebounceEvent = setTimeout(() => {
+      console.tron.log('debounce timeout');
+      event(param);
+    }, ms);
   }
+
   useEffect(() => {
-    loadStudents();
-  }, []);
+    async function loadStudents() {
+      const response = await api.get('students', {
+        params: { q: searchText, page, limit },
+      });
+
+      setData(response.data);
+      setHasPrevPage(response.data.meta.has_prev);
+      setHasNextPage(response.data.meta.has_next);
+    }
+
+    debounce(loadStudents, null, 500);
+  }, [limit, page, searchText]);
 
   return (
     <Container>
@@ -36,12 +58,33 @@ export default function Grid() {
               type="text"
               id="search"
               placeholder="Buscar aluno"
-              onChange={e => loadStudents(e.target.value)}
+              onChange={e => {
+                setPage(1);
+                setSearchText(e.target.value);
+              }}
             />
+            <div className="pagination">
+              <SecondaryButton
+                disabled={!hasPrevPage}
+                onClick={() => {
+                  if (page - 1 < 1) return;
+                  setPage(page - 1);
+                }}>
+                <MdKeyboardArrowLeft color="#fff" size={20} />
+              </SecondaryButton>
+              <span>{page}</span>
+              <SecondaryButton
+                disabled={!hasNextPage}
+                onClick={() => {
+                  if (page + 1 > data.meta.total_pages) return;
+                  setPage(page + 1);
+                }}>
+                <MdKeyboardArrowRight color="#fff" size={20} />
+              </SecondaryButton>
+            </div>
           </aside>
         </div>
       </header>
-
       <table>
         <thead>
           <tr>
@@ -55,7 +98,7 @@ export default function Grid() {
           </tr>
         </thead>
         <tbody>
-          {students.map(student => {
+          {data.records.map(student => {
             return (
               <tr key={student.id}>
                 <td>{student.name}</td>

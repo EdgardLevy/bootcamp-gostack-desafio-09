@@ -1,4 +1,4 @@
-import styled from 'styled-components';
+import styled, {css} from 'styled-components';
 import {darken} from 'polished';
 
 export const PrimaryButton = styled.button`
@@ -24,9 +24,14 @@ export const PrimaryButton = styled.button`
     text-align: center;
     font-weight: bold;
   }
+  ${props =>
+    props.disabled &&
+    css`
+      cursor: not-allowed;
+    `}
 `;
 
-export const SecondaryBytton = styled(PrimaryButton)`
+export const SecondaryButton = styled(PrimaryButton)`
   background: #c5c5c5;
   &:hover {
     background: ${darken(0.03, '#c5c5c5')};

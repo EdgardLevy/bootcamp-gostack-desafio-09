@@ -75,6 +75,21 @@ export const Container = styled.div`
     }
   }
 
+  .pagination {
+    margin-left: 10px;
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    > span {
+      font-weight: bold;
+      margin-left: 5px;
+      margin-right: 10px;
+    }
+    > button {
+      padding: 0px;
+    }
+  }
+
   table {
     border-radius: 4px;
     width: 100%;

@@ -5,7 +5,7 @@ import * as Yup from 'yup';
 import {toast} from 'react-toastify';
 import history from '~/services/history';
 import {Container} from '../styles';
-import {PrimaryButton, SecondaryBytton} from '~/components/Button';
+import {PrimaryButton, SecondaryButton} from '~/components/Button';
 import api from '~/services/api';
 
 const schema = Yup.object().shape({
@@ -30,7 +30,7 @@ const schema = Yup.object().shape({
     .typeError('Informe um valor válido para o peso'),
 });
 
-export default function Create({match}) {
+export default function EditForm({match}) {
   console.tron.log(match);
 
   const [id, setId] = useState(match.params.id);
@@ -55,15 +55,20 @@ export default function Create({match}) {
     loadStudent();
   }, [id]);
 
-  function handleSubmit(data) {
+  async function handleSubmit(data) {
     try {
-      console.tron.log(mode);
-      console.tron.log(data);
-      let response;
-      if (mode === 'create') response = api.post('students', {body: data});
-      else response = api.put(`students/${id}`, {body: data});
-      console.tron.log(response);
-      toast.success('Cadastro realizado com sucesso');
+      // console.tron.log(mode);
+      // console.tron.log(data);
+
+      if (mode === 'create') {
+        await api.post('students', data);
+      } else {
+        await api.put(`students/${id}`, data);
+      }
+      // console.tron.log(response);
+      toast.success(
+        `Cadastro ${mode === 'create' ? 'realizado' : 'atualizado'} com sucesso`
+      );
       history.push('/students');
     } catch (error) {
       toast.error('Falha no cadastro, revise os dados');
@@ -77,14 +82,14 @@ export default function Create({match}) {
           <strong>Cadastro de Aluno</strong>
           <div>
             <aside>
-              <SecondaryBytton
+              <SecondaryButton
                 type="button"
                 onClick={() => {
                   history.push('/students');
                 }}>
                 <MdKeyboardArrowLeft color="#fff" size={20} />
                 <span>VOLTAR</span>
-              </SecondaryBytton>
+              </SecondaryButton>
 
               <PrimaryButton type="submit">
                 <MdAdd color="#fff" size={20} />
@@ -93,15 +98,9 @@ export default function Create({match}) {
             </aside>
           </div>
         </header>
-        <Input
-          id="name"
-          name="name"
-          placeholder="Nome completo"
-          label="NOME COMPLETO"
-        />
+        <Input name="name" placeholder="Nome completo" label="NOME COMPLETO" />
 
         <Input
-          id="email"
           type="email"
           name="email"
           placeholder="exemplo@email.com"

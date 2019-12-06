@@ -8,8 +8,7 @@ import SingUp from '~/pages/SingUp';
 import Dashboard from '~/pages/Dashboard';
 
 import StudentsGrid from '~/pages/Students/Grid';
-import StudentsForm from '~/pages/Students/Create';
-import StudentsUpdate from '~/pages/Students/Update';
+import StudentsForm from '~/pages/Students/Form';
 
 export default function Routes() {
   return (
