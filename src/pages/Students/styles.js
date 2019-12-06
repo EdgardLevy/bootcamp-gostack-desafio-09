@@ -22,6 +22,59 @@ export const Container = styled.div`
     }
   }
 
+  form {
+    display: flex;
+    flex-direction: column;
+    margin-top: 30px;
+    background: #fff;
+    padding: 30px;
+
+    input {
+      border: 1px solid #eee;
+      border-radius: 4px;
+      height: 44px;
+      padding: 0 15px;
+
+      margin: 0 0 10px;
+      &::placeholder {
+        color: rgba(255, 255, 255, 0.7);
+      }
+    }
+    label {
+      color: #444;
+      font-weight: bold;
+    }
+    input {
+      margin-top: 5px;
+    }
+    > span {
+      color: #fb6f91;
+      align-self: flex-start;
+      margin: 0 0 10px;
+      font-weight: bold;
+    }
+    div {
+      > span {
+        color: #fb6f91;
+        align-self: flex-start;
+        margin: 0 0 10px;
+        font-weight: bold;
+      }
+      display: flex;
+      div {
+        flex: 1;
+
+        display: flex;
+        flex-direction: column;
+      }
+
+      :nth-child(2) {
+        margin-left: 15px;
+        margin-right: 15px;
+      }
+    }
+  }
+
   table {
     border-radius: 4px;
     width: 100%;

@@ -8,7 +8,7 @@ import SingUp from '~/pages/SingUp';
 import Dashboard from '~/pages/Dashboard';
 
 import StudentsGrid from '~/pages/Students/Grid';
-import StudentsCreate from '~/pages/Students/Create';
+import StudentsForm from '~/pages/Students/Create';
 import StudentsUpdate from '~/pages/Students/Update';
 
 export default function Routes() {
@@ -18,13 +18,8 @@ export default function Routes() {
       <Route path="/register" component={SingUp} />
       <Route path="/dashboard" component={Dashboard} isPrivate />
       <Route path="/students" exact component={StudentsGrid} isPrivate />
-      <Route
-        path="/students/create"
-        exact
-        component={StudentsCreate}
-        isPrivate
-      />
-      <Route path="/students/:id" exact component={StudentsUpdate} isPrivate />
+      <Route path="/students/create" exact component={StudentsForm} isPrivate />
+      <Route path="/students/:id" exact component={StudentsForm} isPrivate />
 
       {/** Exemplo de rota de 404
       <Route path="/" component={() => <h1>404</h1>} />

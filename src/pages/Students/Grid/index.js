@@ -32,7 +32,12 @@ export default function Grid() {
               <MdAdd color="#fff" size={20} />
               <span>CADASTRAR</span>
             </PrimaryButton>
-            <input type="text" id="search" placeholder="Buscar aluno" />
+            <input
+              type="text"
+              id="search"
+              placeholder="Buscar aluno"
+              onChange={e => loadStudents(e.target.value)}
+            />
           </aside>
         </div>
       </header>
@@ -55,7 +60,7 @@ export default function Grid() {
               <tr key={student.id}>
                 <td>{student.name}</td>
                 <td>{student.email}</td>
-                <td className="center">20</td>
+                <td className="center">{student.age}</td>
                 <td className="center edit">
                   <Link to={`students/${student.id}`}>editar</Link>
                 </td>
