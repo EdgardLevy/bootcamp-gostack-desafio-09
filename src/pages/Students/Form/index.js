@@ -32,10 +32,8 @@ const schema = Yup.object().shape({
 
 export default function EditForm({match}) {
   console.tron.log(match);
-
-  const [id, setId] = useState(match.params.id);
-
-  const [mode, setMode] = useState(id === undefined ? 'create' : 'update');
+  const {id} = match.params;
+  const mode = id === undefined ? 'create' : 'update';
 
   const [student, setStudent] = useState(null);
 
@@ -98,26 +96,32 @@ export default function EditForm({match}) {
             </aside>
           </div>
         </header>
-        <Input name="name" placeholder="Nome completo" label="NOME COMPLETO" />
+        <content>
+          <Input
+            name="name"
+            placeholder="Nome completo"
+            label="NOME COMPLETO"
+          />
 
-        <Input
-          type="email"
-          name="email"
-          placeholder="exemplo@email.com"
-          label="ENDEREÇO DE E-EMAIL"
-        />
+          <Input
+            type="email"
+            name="email"
+            placeholder="exemplo@email.com"
+            label="ENDEREÇO DE E-EMAIL"
+          />
 
-        <div>
           <div>
-            <Input name="age" label="IDADE" />
+            <div>
+              <Input name="age" label="IDADE" />
+            </div>
+            <div>
+              <Input name="weight" label="PESO (em kg)" />
+            </div>
+            <div>
+              <Input name="height" label="Altura" />
+            </div>
           </div>
-          <div>
-            <Input name="weight" label="PESO (em kg)" />
-          </div>
-          <div>
-            <Input name="height" label="Altura" />
-          </div>
-        </div>
+        </content>
       </Form>
     </Container>
   );

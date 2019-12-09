@@ -1,21 +1,22 @@
-import React, { useState, useEffect, useCallback } from 'react';
-import { MdAdd, MdKeyboardArrowLeft, MdKeyboardArrowRight } from 'react-icons/md';
-import { Link } from 'react-router-dom';
+import React, {useState, useEffect} from 'react';
+import {MdAdd, MdEdit, MdDelete} from 'react-icons/md';
+import swal from 'sweetalert';
+import {toast} from 'react-toastify';
 import history from '~/services/history';
-import { Container } from '../styles';
-import { PrimaryButton, SecondaryButton } from '~/components/Button';
+import {Container} from '../styles';
+import {PrimaryButton, PaginateButton, ActionButton} from '~/components/Button';
 import api from '~/services/api';
 
 let tmrDebounceEvent = null;
+const LIMIT_RECORDS_PER_PAGE = 5;
 
 export default function Grid() {
   const [searchText, setSearchText] = useState('');
-  const [data, setData] = useState({ records: [] });
-  const [hasPrevPage, setHasPrevPage] = useState(false);
-  const [hasNextPage, setHasNextPage] = useState(false);
+  const [data, setData] = useState({
+    records: [],
+    meta: {has_prev: false, has_next: false, total_pages: 0, total_records: 0},
+  });
   const [page, setPage] = useState(1);
-
-  const [limit, setLimit] = useState(3);
 
   function debounce(event, param, ms) {
     console.tron.log('debounce');
@@ -29,16 +30,61 @@ export default function Grid() {
   useEffect(() => {
     async function loadStudents() {
       const response = await api.get('students', {
-        params: { q: searchText, page, limit },
+        params: {q: searchText, page, limit: LIMIT_RECORDS_PER_PAGE},
       });
 
       setData(response.data);
-      setHasPrevPage(response.data.meta.has_prev);
-      setHasNextPage(response.data.meta.has_next);
     }
 
-    debounce(loadStudents, null, 500);
-  }, [limit, page, searchText]);
+    debounce(loadStudents, null, 300);
+  }, [page, searchText]);
+
+  function confirmDelete(id) {
+    const _student = data.records.find(student => student.id === id);
+    swal({
+      text: `Deseja excluir o aluno ${_student.name} ?`,
+      icon: 'warning',
+      dangerMode: true,
+      buttons: ['Não', 'Sim'],
+    }).then(async willDelete => {
+      if (willDelete) {
+        // swal('Poof! Your imaginary file has been deleted!', {
+        //   icon: 'success',
+        // });
+        try {
+          await api.delete(`students/${_student.id}`);
+          const response = await api.get('students', {
+            params: {q: searchText, page, limit: LIMIT_RECORDS_PER_PAGE},
+          });
+
+          setData(response.data);
+
+          toast.success('Aluno excluído com sucesso');
+        } catch (error) {
+          toast.error('Falha na exclusão, entre em contato com o suporte');
+        }
+      }
+    });
+  }
+
+  function renderPages() {
+    if (data.meta.total_pages === 1) return;
+    const pages = [];
+    for (let idxpage = 1; idxpage <= data.meta.total_pages; idxpage++) {
+      const b = (
+        <PaginateButton
+          key={idxpage}
+          selected={idxpage === page}
+          onClick={() => {
+            setPage(idxpage);
+          }}>
+          {idxpage}
+        </PaginateButton>
+      );
+      pages.push(b);
+    }
+    return pages;
+  }
 
   return (
     <Container>
@@ -63,28 +109,12 @@ export default function Grid() {
                 setSearchText(e.target.value);
               }}
             />
-            <div className="pagination">
-              <SecondaryButton
-                disabled={!hasPrevPage}
-                onClick={() => {
-                  if (page - 1 < 1) return;
-                  setPage(page - 1);
-                }}>
-                <MdKeyboardArrowLeft color="#fff" size={20} />
-              </SecondaryButton>
-              <span>{page}</span>
-              <SecondaryButton
-                disabled={!hasNextPage}
-                onClick={() => {
-                  if (page + 1 > data.meta.total_pages) return;
-                  setPage(page + 1);
-                }}>
-                <MdKeyboardArrowRight color="#fff" size={20} />
-              </SecondaryButton>
-            </div>
           </aside>
         </div>
       </header>
+      <div className="totalRecords">
+        <span>{`Total de registros: ${data.meta.total_records}`}</span>
+      </div>
       <table>
         <thead>
           <tr>
@@ -104,15 +134,38 @@ export default function Grid() {
                 <td>{student.name}</td>
                 <td>{student.email}</td>
                 <td className="center">{student.age}</td>
-                <td className="center edit">
-                  <Link to={`students/${student.id}`}>editar</Link>
+                <td className="center">
+                  <ActionButton
+                    type="button"
+                    title="editar"
+                    onClick={() => {
+                      history.push(`students/${student.id}`);
+                    }}>
+                    <MdEdit size={20} color="#fb6f91" />
+                  </ActionButton>
                 </td>
-                <td className="center delete">apagar</td>
+
+                <td className="center delete">
+                  <ActionButton
+                    type="button"
+                    title="deletar"
+                    onClick={() => {
+                      confirmDelete(student.id);
+                    }}>
+                    <MdDelete size={20} color="#fb6f91" />
+                  </ActionButton>
+                </td>
               </tr>
             );
           })}
         </tbody>
       </table>
+
+      <div className="pagination">
+        <div>
+          <div>{renderPages()}</div>
+        </div>
+      </div>
     </Container>
   );
 }

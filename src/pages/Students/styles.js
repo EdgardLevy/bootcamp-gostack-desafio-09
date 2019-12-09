@@ -23,74 +23,75 @@ export const Container = styled.div`
   }
 
   form {
-    display: flex;
-    flex-direction: column;
-    margin-top: 30px;
-    background: #fff;
-    padding: 30px;
+    content {
+      display: flex;
+      flex-direction: column;
+      margin-top: 20px;
+      background: #fff;
+      padding: 30px;
 
-    input {
-      border: 1px solid #eee;
-      border-radius: 4px;
-      height: 44px;
-      padding: 0 15px;
+      input {
+        border: 1px solid #eee;
+        border-radius: 4px;
+        height: 44px;
+        padding: 0 15px;
 
-      margin: 0 0 10px;
-      &::placeholder {
-        color: rgba(255, 255, 255, 0.7);
+        margin: 0 0 10px;
+        &::placeholder {
+          color: rgba(255, 255, 255, 0.7);
+        }
       }
-    }
-    label {
-      color: #444;
-      font-weight: bold;
-    }
-    input {
-      margin-top: 5px;
-    }
-    > span {
-      color: #fb6f91;
-      align-self: flex-start;
-      margin: 0 0 10px;
-      font-weight: bold;
-    }
-    div {
+      label {
+        color: #444;
+        font-weight: bold;
+      }
+      input {
+        margin-top: 5px;
+      }
       > span {
         color: #fb6f91;
         align-self: flex-start;
         margin: 0 0 10px;
         font-weight: bold;
       }
-      display: flex;
       div {
-        flex: 1;
-
+        > span {
+          color: #fb6f91;
+          align-self: flex-start;
+          margin: 0 0 10px;
+          font-weight: bold;
+        }
         display: flex;
-        flex-direction: column;
-      }
+        div {
+          flex: 1;
 
-      :nth-child(2) {
-        margin-left: 15px;
-        margin-right: 15px;
+          display: flex;
+          flex-direction: column;
+        }
+
+        :nth-child(2) {
+          margin-left: 15px;
+          margin-right: 15px;
+        }
       }
     }
   }
+  .totalRecords {
+    text-align: right;
 
-  .pagination {
-    margin-left: 10px;
-    display: flex;
-    justify-content: flex-end;
-    align-items: center;
-    > span {
-      font-weight: bold;
-      margin-left: 5px;
-      margin-right: 10px;
-    }
-    > button {
-      padding: 0px;
-    }
+    align-self: right;
   }
-
+  .center {
+    text-align: center;
+  }
+  .edit {
+    color: blue;
+  }
+  .delete {
+    color: red;
+  }
   table {
+    margin-top: 5px;
     border-radius: 4px;
     width: 100%;
 
@@ -98,15 +99,6 @@ export const Container = styled.div`
     background: #fff;
     line-height: 20px;
     font-size: 16px;
-    .center {
-      text-align: center;
-    }
-    .edit {
-      color: blue;
-    }
-    .delete {
-      color: red;
-    }
 
     thead {
       tr {
@@ -126,6 +118,28 @@ export const Container = styled.div`
           border-top: 1px solid #eee;
         }
       }
+    }
+  }
+
+  .pagination {
+    margin-top: 5px;
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+
+    div {
+      display: flex;
+      flex-direction: column;
+      margin-top: 3px;
+      > div {
+        display: flex;
+        flex-direction: row;
+      }
+    }
+    > button {
+      border: 0;
+      padding: 10px;
+      font-weight: bold;
     }
   }
 `;
