@@ -43,7 +43,7 @@ export default function EditForm({match}) {
     console.tron.log(id);
     async function loadRecord() {
       try {
-        const response = await api.get(`students/${id}`);
+        const response = await api.get(`subscriptions/${id}`);
         setRecord(response.data);
         console.tron.log(response);
       } catch (error) {
@@ -60,9 +60,9 @@ export default function EditForm({match}) {
       // console.tron.log(data);
 
       if (mode === 'create') {
-        await api.post('students', data);
+        await api.post('subscriptions', data);
       } else {
-        await api.put(`students/${id}`, data);
+        await api.put(`subscriptions/${id}`, data);
       }
       // console.tron.log(response);
       toast.success(
@@ -77,19 +77,19 @@ export default function EditForm({match}) {
   return (
     <Container>
       <header>
-        <strong>{titleMode} de aluno</strong>
+        <strong>{titleMode} de matrícula</strong>
         <div>
           <aside>
             <SecondaryButton
               type="button"
               onClick={() => {
-                history.push('/students');
+                history.push('/subscriptions');
               }}>
               <MdKeyboardArrowLeft color="#fff" size={20} />
               <span>VOLTAR</span>
             </SecondaryButton>
 
-            <PrimaryButton type="submit" form="studentForm">
+            <PrimaryButton type="submit" form="subscriptionForm">
               <MdAdd color="#fff" size={20} />
               <span>SALVAR</span>
             </PrimaryButton>
@@ -97,7 +97,7 @@ export default function EditForm({match}) {
         </div>
       </header>
       <Form
-        id="studentForm"
+        id="subscriptionForm"
         initialData={record}
         schema={schema}
         onSubmit={handleSubmit}>

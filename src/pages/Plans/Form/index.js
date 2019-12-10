@@ -1,13 +1,13 @@
-import React, { useState, useEffect } from 'react';
-import { MdAdd, MdKeyboardArrowLeft } from 'react-icons/md';
-import { Form, Input } from '@rocketseat/unform';
+import React, {useState, useEffect} from 'react';
+import {MdAdd, MdKeyboardArrowLeft} from 'react-icons/md';
+import {Form, Input} from '@rocketseat/unform';
 import * as Yup from 'yup';
-import { toast } from 'react-toastify';
+import {toast} from 'react-toastify';
 
-import { formatPrice } from '~/util/format';
+import {formatPrice} from '~/util/format';
 import history from '~/services/history';
-import { Container } from '../styles';
-import { PrimaryButton, SecondaryButton } from '~/components/Button';
+import {Container} from '../styles';
+import {PrimaryButton, SecondaryButton} from '~/components/Button';
 import api from '~/services/api';
 
 const schema = Yup.object().shape({
@@ -23,10 +23,11 @@ const schema = Yup.object().shape({
     .typeError('Informe um valor válido para o preço'),
 });
 
-export default function EditForm({ match }) {
+export default function EditForm({match}) {
   console.tron.log(match);
-  const { id } = match.params;
+  const {id} = match.params;
   const mode = id === undefined ? 'create' : 'update';
+  const titleMode = id === undefined ? 'Cadastro' : 'Edição';
 
   const [record, setRecord] = useState({});
   const [duration, setDuration] = useState(0);
@@ -88,27 +89,31 @@ export default function EditForm({ match }) {
 
   return (
     <Container>
-      <Form initialData={record} schema={schema} onSubmit={handleSubmit}>
-        <header>
-          <strong>Cadastro de Plano</strong>
-          <div>
-            <aside>
-              <SecondaryButton
-                type="button"
-                onClick={() => {
-                  history.push('/plans');
-                }}>
-                <MdKeyboardArrowLeft color="#fff" size={20} />
-                <span>VOLTAR</span>
-              </SecondaryButton>
+      <header>
+        <strong>{titleMode} de plano</strong>
+        <div>
+          <aside>
+            <SecondaryButton
+              type="button"
+              onClick={() => {
+                history.push('/plans');
+              }}>
+              <MdKeyboardArrowLeft color="#fff" size={20} />
+              <span>VOLTAR</span>
+            </SecondaryButton>
 
-              <PrimaryButton type="submit">
-                <MdAdd color="#fff" size={20} />
-                <span>SALVAR</span>
-              </PrimaryButton>
-            </aside>
-          </div>
-        </header>
+            <PrimaryButton type="submit" form="planForm">
+              <MdAdd color="#fff" size={20} />
+              <span>SALVAR</span>
+            </PrimaryButton>
+          </aside>
+        </div>
+      </header>
+      <Form
+        id="planForm"
+        initialData={record}
+        schema={schema}
+        onSubmit={handleSubmit}>
         <content>
           <Input name="title" label="TÍTULO DO PLANO" />
           <div>
