@@ -1,12 +1,12 @@
-import React, { useState, useEffect } from 'react';
-import { MdAdd, MdEdit, MdDelete, MdCheckCircle } from 'react-icons/md';
+import React, {useState, useEffect} from 'react';
+import {MdAdd, MdEdit, MdDelete, MdCheckCircle} from 'react-icons/md';
 import swal from 'sweetalert';
-import { toast } from 'react-toastify';
-import { format, parseISO } from 'date-fns';
+import {toast} from 'react-toastify';
+import {format, parseISO} from 'date-fns';
 import pt from 'date-fns/locale/pt';
 import history from '~/services/history';
-import { Container } from '../styles';
-import { PrimaryButton, PaginateButton, ActionButton } from '~/components/Button';
+import {Container} from '../styles';
+import {PrimaryButton, PaginateButton, ActionButton} from '~/components/Button';
 import api from '~/services/api';
 
 let tmrDebounceEvent = null;
@@ -15,7 +15,7 @@ const LIMIT_RECORDS_PER_PAGE = 5;
 export default function Grid() {
   const [data, setData] = useState({
     records: [],
-    meta: { has_prev: false, has_next: false, total_pages: 0, total_records: 0 },
+    meta: {has_prev: false, has_next: false, total_pages: 0, total_records: 0},
   });
   const [page, setPage] = useState(1);
 
@@ -31,7 +31,7 @@ export default function Grid() {
   useEffect(() => {
     async function loadRecords() {
       const response = await api.get('subscriptions', {
-        params: { page, limit: LIMIT_RECORDS_PER_PAGE },
+        params: {page, limit: LIMIT_RECORDS_PER_PAGE},
       });
       response.data.records.map(item => {
         item.startDateFormatted = format(
@@ -72,7 +72,7 @@ export default function Grid() {
         try {
           await api.delete(`subscriptions/${_subscription.id}`);
           const response = await api.get('subscriptions', {
-            params: { page, limit: LIMIT_RECORDS_PER_PAGE },
+            params: {page, limit: LIMIT_RECORDS_PER_PAGE},
           });
 
           setData(response.data);
@@ -124,7 +124,7 @@ export default function Grid() {
       <div className="totalRecords">
         <span>{`Total de registros: ${data.meta.total_records}`}</span>
       </div>
-      <table>
+      <table className="grid">
         <thead>
           <tr>
             <th width="390">ALUNO</th>

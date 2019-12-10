@@ -61,17 +61,12 @@ export const Container = styled.div`
           margin: 0 0 10px;
           font-weight: bold;
         }
-        display: flex;
+        /*display: flex;*/
         div {
-          flex: 1;
+          /*flex: 1;
 
           display: flex;
-          flex-direction: column;
-        }
-
-        :nth-child(2) {
-          margin-left: 15px;
-          margin-right: 15px;
+          flex-direction: column;*/
         }
       }
     }
@@ -83,7 +78,18 @@ export const Container = styled.div`
     text-align: center;
   }
 
-  table {
+  .formInputs {
+    /*background: red;*/
+
+    td {
+      :nth-child(1) {
+        width: 300px;
+        padding-right: 5px;
+      }
+    }
+  }
+
+  .grid {
     margin-top: 5px;
     border-radius: 4px;
     width: 100%;
