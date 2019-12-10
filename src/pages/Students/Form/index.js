@@ -35,22 +35,22 @@ export default function EditForm({match}) {
   const {id} = match.params;
   const mode = id === undefined ? 'create' : 'update';
 
-  const [student, setStudent] = useState(null);
+  const [record, setRecord] = useState(null);
 
   useEffect(() => {
     if (id === undefined) return;
     console.tron.log(id);
-    async function loadStudent() {
+    async function loadRecord() {
       try {
         const response = await api.get(`students/${id}`);
-        setStudent(response.data);
+        setRecord(response.data);
         console.tron.log(response);
       } catch (error) {
         console.tron.error(error);
       }
     }
 
-    loadStudent();
+    loadRecord();
   }, [id]);
 
   async function handleSubmit(data) {
@@ -75,7 +75,7 @@ export default function EditForm({match}) {
 
   return (
     <Container>
-      <Form initialData={student} schema={schema} onSubmit={handleSubmit}>
+      <Form initialData={record} schema={schema} onSubmit={handleSubmit}>
         <header>
           <strong>Cadastro de Aluno</strong>
           <div>

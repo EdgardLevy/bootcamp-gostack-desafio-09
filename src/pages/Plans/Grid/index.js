@@ -6,6 +6,7 @@ import history from '~/services/history';
 import {Container} from '../styles';
 import {PrimaryButton, PaginateButton, ActionButton} from '~/components/Button';
 import api from '~/services/api';
+import {formatPrice} from '~/util/format';
 
 let tmrDebounceEvent = null;
 const LIMIT_RECORDS_PER_PAGE = 5;
@@ -29,8 +30,24 @@ export default function Grid() {
 
   useEffect(() => {
     async function loadRecords() {
-      const response = await api.get('students', {
+      const response = await api.get('plans', {
         params: {q: searchText, page, limit: LIMIT_RECORDS_PER_PAGE},
+      });
+
+      /**
+       *
+       * priceFormatted: formatPrice(product.price),
+       *
+       */
+
+      console.tron.log(response);
+
+      response.data.records.map(item => {
+        item.durationFormatted =
+          item.duration === 1
+            ? `${item.duration} mês`
+            : `${item.duration} meses`;
+        item.priceFormatted = formatPrice(item.price);
       });
 
       setData(response.data);
@@ -40,9 +57,10 @@ export default function Grid() {
   }, [page, searchText]);
 
   function confirmDelete(id) {
-    const _student = data.records.find(student => student.id === id);
+    console.tron.log(id);
+    const _plan = data.records.find(plan => plan.id === id);
     swal({
-      text: `Deseja excluir o aluno ${_student.name} ?`,
+      text: `Deseja excluir o plano ${_plan.title} ?`,
       icon: 'warning',
       dangerMode: true,
       buttons: ['Não', 'Sim'],
@@ -52,14 +70,14 @@ export default function Grid() {
         //   icon: 'success',
         // });
         try {
-          await api.delete(`students/${_student.id}`);
-          const response = await api.get('students', {
+          await api.delete(`plans/${_plan.id}`);
+          const response = await api.get('plans', {
             params: {q: searchText, page, limit: LIMIT_RECORDS_PER_PAGE},
           });
 
           setData(response.data);
 
-          toast.success('Aluno excluído com sucesso');
+          toast.success('Plano excluído com sucesso');
         } catch (error) {
           toast.error('Falha na exclusão, entre em contato com o suporte');
         }
@@ -89,13 +107,13 @@ export default function Grid() {
   return (
     <Container>
       <header>
-        <strong>Gerenciando alunos</strong>
+        <strong>Gerenciando planos</strong>
         <div>
           <aside>
             <PrimaryButton
               type="button"
               onClick={() => {
-                history.push('/students/create');
+                history.push('/plans/create');
               }}>
               <MdAdd color="#fff" size={20} />
               <span>CADASTRAR</span>
@@ -103,7 +121,7 @@ export default function Grid() {
             <input
               type="text"
               id="search"
-              placeholder="Buscar aluno"
+              placeholder="Buscar plano"
               onChange={e => {
                 setPage(1);
                 setSearchText(e.target.value);
@@ -118,28 +136,28 @@ export default function Grid() {
       <table>
         <thead>
           <tr>
-            <th width="390">NOME</th>
-            <th width="390">E-MAIL</th>
+            <th width="390">TÍTULO</th>
+            <th width="390">DURAÇÃO</th>
             <th width="150" className="center">
-              IDADE
+              VALOR p/ MÊS
             </th>
             <th width="80" />
             <th width="80" />
           </tr>
         </thead>
         <tbody>
-          {data.records.map(student => {
+          {data.records.map(plan => {
             return (
-              <tr key={student.id}>
-                <td>{student.name}</td>
-                <td>{student.email}</td>
-                <td className="center">{student.age}</td>
+              <tr key={plan.id}>
+                <td>{plan.title}</td>
+                <td>{plan.durationFormatted}</td>
+                <td className="center">{plan.priceFormatted}</td>
                 <td className="center">
                   <ActionButton
                     type="button"
                     title="editar"
                     onClick={() => {
-                      history.push(`students/${student.id}`);
+                      history.push(`plans/${plan.id}`);
                     }}>
                     <MdEdit size={20} color="#fb6f91" />
                   </ActionButton>
@@ -150,7 +168,7 @@ export default function Grid() {
                     type="button"
                     title="deletar"
                     onClick={() => {
-                      confirmDelete(student.id);
+                      confirmDelete(plan.id);
                     }}>
                     <MdDelete size={20} color="#fb6f91" />
                   </ActionButton>

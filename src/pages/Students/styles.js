@@ -78,18 +78,11 @@ export const Container = styled.div`
   }
   .totalRecords {
     text-align: right;
-
-    align-self: right;
   }
   .center {
     text-align: center;
   }
-  .edit {
-    color: blue;
-  }
-  .delete {
-    color: red;
-  }
+
   table {
     margin-top: 5px;
     border-radius: 4px;
