@@ -1,13 +1,14 @@
-import React, {useState, useEffect} from 'react';
+import React, {useState, useEffect, useMemo} from 'react';
 import {MdReply} from 'react-icons/md';
 import swal from 'sweetalert';
 import {toast} from 'react-toastify';
-import {format, parseISO} from 'date-fns';
+import {format, parseISO, setISODay} from 'date-fns';
 import pt from 'date-fns/locale/pt';
 import history from '~/services/history';
 import {Container} from '../styles';
 import {PaginateButton, ActionButton} from '~/components/Button';
 import api from '~/services/api';
+import AnswerForm from '../componets/AnswerForm';
 
 let tmrDebounceEvent = null;
 const LIMIT_RECORDS_PER_PAGE = 10;
@@ -19,6 +20,12 @@ export default function Grid() {
     meta: {has_prev: false, has_next: false, total_pages: 0, total_records: 0},
   });
   const [page, setPage] = useState(1);
+  const [helpOrderId, setHelpOrderId] = useState(null);
+
+  const helpOrder = useMemo(() => {
+    if (!helpOrderId) return;
+    return data.records.find(item => item.id === helpOrderId);
+  }, [data.records, helpOrderId]);
 
   function debounce(event, param, ms) {
     if (tmrDebounceEvent) clearTimeout(tmrDebounceEvent);
@@ -95,8 +102,14 @@ export default function Grid() {
     return pages;
   }
 
+  function closePopUp() {
+    console.tron.log('closePopUp');
+    setHelpOrderId(null);
+  }
+
   return (
     <Container>
+      <AnswerForm helpOrder={helpOrder} onClose={closePopUp} />
       <header>
         <strong>Pedidos de auxílio</strong>
       </header>
@@ -119,9 +132,10 @@ export default function Grid() {
                 <td className="center">
                   <ActionButton
                     type="button"
-                    title="editar"
+                    title="responder"
                     onClick={() => {
-                      history.push(`subscriptions/${helpOrder.id}`);
+                      // history.push(`subscriptions/${helpOrder.id}`);
+                      setHelpOrderId(helpOrder.id);
                     }}>
                     <MdReply size={20} color="#fb6f91" />
                   </ActionButton>
