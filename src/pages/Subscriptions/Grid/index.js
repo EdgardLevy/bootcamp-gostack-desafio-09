@@ -66,18 +66,17 @@ export default function Grid() {
       buttons: ['Não', 'Sim'],
     }).then(async willDelete => {
       if (willDelete) {
-        // swal('Poof! Your imaginary file has been deleted!', {
-        //   icon: 'success',
-        // });
         try {
           await api.delete(`subscriptions/${_subscription.id}`);
-          const response = await api.get('subscriptions', {
-            params: {page, limit: LIMIT_RECORDS_PER_PAGE},
-          });
 
-          setData(response.data);
+          const _data = {...data};
+          _data.records.splice(
+            data.records.findIndex(item => item.id === _subscription.id),
+            1
+          );
+          setData(_data);
 
-          toast.success('Aluno excluído com sucesso');
+          toast.success('Matrícula excluída com sucesso');
         } catch (error) {
           toast.error('Falha na exclusão, entre em contato com o suporte');
         }
@@ -127,17 +126,11 @@ export default function Grid() {
       <table className="grid">
         <thead>
           <tr>
-            <th width="390">ALUNO</th>
-            <th width="300">PLANO</th>
-            <th width="300" className="center">
-              INÍCIO
-            </th>
-            <th width="300" className="center">
-              TÉRMINO
-            </th>
-            <th width="150" className="center">
-              ATIVA
-            </th>
+            <th>ALUNO</th>
+            <th className="center">PLANO</th>
+            <th className="center">INÍCIO</th>
+            <th className="center">TÉRMINO</th>
+            <th className="center">ATIVA</th>
             <th width="80" />
             <th width="80" />
           </tr>
@@ -147,7 +140,7 @@ export default function Grid() {
             return (
               <tr key={subscription.id}>
                 <td>{subscription.student.name}</td>
-                <td>{subscription.plan.title}</td>
+                <td className="center">{subscription.plan.title}</td>
                 <td className="center">{subscription.startDateFormatted}</td>
                 <td className="center">{subscription.endDateFormatted}</td>
                 <td className="center">

@@ -23,50 +23,41 @@ export const Container = styled.div`
   }
 
   form {
-    content {
-      display: flex;
-      flex-direction: column;
-      margin-top: 20px;
-      background: #fff;
-      padding: 30px;
+    margin-top: 20px;
+    background: #fff;
+    padding: 30px;
+    label {
+      color: #444;
+      font-weight: bold;
+      /* background: blue; */
+    }
+    span {
+      color: #fb6f91;
+      align-self: flex-start;
+      margin: 0 0 10px;
+      font-weight: bold;
+    }
+    table {
+      width: 100%;
+      margin-top: 5px;
+      td {
+        /* background: red; */
 
-      input {
-        border: 1px solid #eee;
-        border-radius: 4px;
-        height: 44px;
-        padding: 0 15px;
-
-        margin: 0 0 10px;
-        &::placeholder {
-          color: rgba(255, 255, 255, 0.7);
-        }
-      }
-      label {
-        color: #444;
-        font-weight: bold;
-      }
-      input {
-        margin-top: 5px;
-      }
-      > span {
-        color: #fb6f91;
-        align-self: flex-start;
-        margin: 0 0 10px;
-        font-weight: bold;
-      }
-      div {
-        > span {
-          color: #fb6f91;
-          align-self: flex-start;
-          margin: 0 0 10px;
-          font-weight: bold;
-        }
-        /*display: flex;*/
-        div {
-          /*flex: 1;
-
-          display: flex;
-          flex-direction: column;*/
+        :nth-child(2),
+        :nth-child(3),
+        :nth-child(4) {
+          width: 20%;
+          padding-left: 5px;
+          input {
+            border: 1px solid #eee;
+            border-radius: 4px;
+            height: 38px;
+            padding: 0 15px;
+            /* margin: 5px 0 10px; */
+            &::placeholder {
+              color: rgba(255, 255, 255, 0.7);
+            }
+          }
         }
       }
     }
@@ -75,18 +66,7 @@ export const Container = styled.div`
     text-align: right;
   }
   .center {
-    text-align: center;
-  }
-
-  .formInputs {
-    /*background: red;*/
-
-    td {
-      :nth-child(1) {
-        width: 300px;
-        padding-right: 5px;
-      }
-    }
+    text-align: center !important;
   }
 
   .grid {

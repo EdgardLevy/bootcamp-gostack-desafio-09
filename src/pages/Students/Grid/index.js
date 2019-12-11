@@ -48,16 +48,15 @@ export default function Grid() {
       buttons: ['Não', 'Sim'],
     }).then(async willDelete => {
       if (willDelete) {
-        // swal('Poof! Your imaginary file has been deleted!', {
-        //   icon: 'success',
-        // });
         try {
           await api.delete(`students/${_student.id}`);
-          const response = await api.get('students', {
-            params: {q: searchText, page, limit: LIMIT_RECORDS_PER_PAGE},
-          });
 
-          setData(response.data);
+          const _data = {...data};
+          _data.records.splice(
+            data.records.findIndex(item => item.id === _student.id),
+            1
+          );
+          setData(_data);
 
           toast.success('Aluno excluído com sucesso');
         } catch (error) {

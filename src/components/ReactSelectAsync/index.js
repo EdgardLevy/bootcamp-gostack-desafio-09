@@ -1,16 +1,18 @@
-import React, {useRef, useEffect} from 'react';
+import React, {useRef, useEffect, useState} from 'react';
 import PropTypes from 'prop-types';
 import {useField} from '@rocketseat/unform';
 
 import AsyncSelect from 'react-select/async';
 
+// export default function ReactSelectAsync({
 export default function ReactSelectAsync({
   name,
   multiple,
   loadOptions,
+  label,
   ...rest
 }) {
-  const ref = useRef(null);
+  const ref = useRef();
   const {fieldName, registerField, defaultValue, error} = useField(name);
 
   function parseSelectValue(selectRef) {
@@ -36,11 +38,12 @@ export default function ReactSelectAsync({
 
   return (
     <>
+      {label && <label htmlFor={fieldName}>{label}</label>}
+
       <AsyncSelect
         name={fieldName}
         aria-label={fieldName}
         loadOptions={loadOptions}
-        isMulti={multiple}
         ref={ref}
         cacheOptions
         isClearable

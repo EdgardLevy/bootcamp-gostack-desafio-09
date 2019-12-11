@@ -71,11 +71,13 @@ export default function Grid() {
         // });
         try {
           await api.delete(`plans/${_plan.id}`);
-          const response = await api.get('plans', {
-            params: {q: searchText, page, limit: LIMIT_RECORDS_PER_PAGE},
-          });
 
-          setData(response.data);
+          const _data = {...data};
+          _data.records.splice(
+            data.records.findIndex(item => item.id === _plan.id),
+            1
+          );
+          setData(_data);
 
           toast.success('Plano excluído com sucesso');
         } catch (error) {

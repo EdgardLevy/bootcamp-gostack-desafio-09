@@ -1,10 +1,10 @@
-import React, {useRef, useEffect} from 'react';
+import React, {useRef, useEffect, useState} from 'react';
 import Select from 'react-select';
 
 import {useField} from '@rocketseat/unform';
 
 export default function ReactSelect({name, label, options, multiple, ...rest}) {
-  const ref = useRef(null);
+  const ref = useRef();
   const {fieldName, registerField, defaultValue, error} = useField(name);
 
   function parseSelectValue(selectRef) {
@@ -12,7 +12,6 @@ export default function ReactSelect({name, label, options, multiple, ...rest}) {
     if (!multiple) {
       return selectValue ? selectValue.id : '';
     }
-
     return selectValue ? selectValue.map(option => option.id) : [];
   }
 

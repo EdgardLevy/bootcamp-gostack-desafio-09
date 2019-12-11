@@ -1,13 +1,13 @@
-import React, { useState, useEffect } from 'react';
-import { MdAdd, MdKeyboardArrowLeft } from 'react-icons/md';
-import { Form, Input } from '@rocketseat/unform';
+import React, {useState, useEffect, useMemo} from 'react';
+import {MdAdd, MdKeyboardArrowLeft} from 'react-icons/md';
+import {Form, Input} from '@rocketseat/unform';
 
 import * as Yup from 'yup';
-import { toast } from 'react-toastify';
+import {toast} from 'react-toastify';
 // import DatePicker, {registerLocale} from 'react-datepicker';
-import { registerLocale } from 'react-datepicker';
+import {registerLocale} from 'react-datepicker';
 
-import { addMonths } from 'date-fns';
+import {addMonths, parseISO} from 'date-fns';
 import pt from 'date-fns/locale/pt';
 // import AsyncSelect from 'react-select/async';
 import AsyncSelect from '~/components/ReactSelectAsync';
@@ -15,38 +15,29 @@ import DatePicker from '~/components/ReactDatePicker';
 import Select from '~/components/ReactSelect';
 
 import history from '~/services/history';
-import { Container } from '../styles';
-import { PrimaryButton, SecondaryButton } from '~/components/Button';
+import {Container} from '../styles';
+import {PrimaryButton, SecondaryButton} from '~/components/Button';
 import api from '~/services/api';
-import { formatPrice } from '~/util/format';
+import {formatPrice} from '~/util/format';
 
 registerLocale('pt', pt);
 
 const schema = Yup.object().shape({
-  name: Yup.string()
-    .required()
-    .min(5, 'O nome precisa conter 5 caracteres'),
-  email: Yup.string()
-    .email()
-    .required('O email é obrigatório'),
-  age: Yup.number()
-    .required('Idade é obrigatória')
-    .min(0, 'Informe a com valor maior ou acima de 0 (zero)')
-    .typeError('Informe um valor válido para a idade'),
-  height: Yup.number()
-    .required('A altura é obrigatória')
-    .min(0, 'Informe o altura com valor acima de 0 (zero)')
-    .typeError('Informe um valor válido para a altura'),
-
-  weight: Yup.number()
-    .required('O peso é obrigatório')
-    .min(0, 'Informe o altura com valor acima de 0 (zero)')
-    .typeError('Informe um valor válido para o peso'),
+  student_id: Yup.number()
+    .typeError('Selecione um aluno')
+    .required(),
+  plan_id: Yup.number()
+    .typeError('Selecione um plano typerror')
+    .required(),
+  start_date: Yup.date()
+    .typeError('Informe a data de início')
+    .required(),
 });
 
-export default function EditForm({ match }) {
-  console.tron.log(match);
-  const { id } = match.params;
+export default function EditForm({match}) {
+  // console.tron.log(match);
+
+  const id = useMemo(() => match.params.id, [match.params]);
   const mode = id === undefined ? 'create' : 'update';
   const titleMode = id === undefined ? 'Cadastro' : 'Edição';
 
@@ -54,17 +45,32 @@ export default function EditForm({ match }) {
   const [record, setRecord] = useState(null);
 
   const [startDate, setStartDate] = useState(new Date());
-  const [endDate, setEndDate] = useState(null);
+  // const [endDate, setEndDate] = useState(null);
 
   const [selectedPlan, setSelectedPlan] = useState(null);
+  const [selectedStudent, setSelectedStudent] = useState(null);
 
   useEffect(() => {
     if (id === undefined) return;
-    console.tron.log(id);
+
     async function loadRecord() {
+      console.tron.log('load subscription');
       try {
         const response = await api.get(`subscriptions/${id}`);
-        setRecord(response.data);
+        const start_date = parseISO(response.data.start_date);
+        const plan_id = response.data.plan.id;
+        const {student} = response.data;
+
+        const _plan = plans.find(plan => plan.id === plan_id);
+        setSelectedPlan(_plan);
+        setStartDate(start_date);
+        setSelectedStudent({value: student.id, label: student.name});
+
+        console.tron.log('student', student);
+        const r = {};
+        console.tron.log('record', r);
+        setRecord(r);
+
         console.tron.log(response);
       } catch (error) {
         console.tron.error(error);
@@ -72,12 +78,12 @@ export default function EditForm({ match }) {
     }
 
     loadRecord();
-  }, [id]);
+  }, [id, plans]);
 
   useEffect(() => {
     async function loadPlans() {
       const response = await api.get('plans', {
-        params: { page: 1, limit: 100 },
+        params: {page: 1, limit: 100},
       });
 
       response.data.records.map(plan => {
@@ -94,20 +100,21 @@ export default function EditForm({ match }) {
     loadPlans();
   }, []);
 
-  useEffect(() => {
-    if (!selectedPlan || !startDate) return;
+  // useEffect(() => {
+  //   if (!selectedPlan || !startDate) return;
 
-    setEndDate(addMonths(startDate, selectedPlan.duration));
-  }, [selectedPlan, startDate]);
+  //   setEndDate(addMonths(startDate, selectedPlan.duration));
+  // }, [selectedPlan, startDate]);
 
   async function handleSubmit(data) {
-    const { student_id, plan_id, start_date } = data;
+    console.tron.log('handleSubmit', data);
+    const {student_id, plan_id, start_date} = data;
 
     try {
       if (mode === 'create') {
-        await api.post('subscriptions', { student_id, plan_id, start_date });
+        await api.post('subscriptions', {student_id, plan_id, start_date});
       } else {
-        await api.put(`subscriptions/${id}`, { student_id, plan_id, start_date });
+        await api.put(`subscriptions/${id}`, {student_id, plan_id, start_date});
       }
 
       toast.success(
@@ -115,22 +122,36 @@ export default function EditForm({ match }) {
       );
       history.push('/subscriptions');
     } catch (error) {
+      console.tron.error(error);
       toast.error('Falha no cadastro, revise os dados');
     }
   }
 
-  const loadOptions = async (inputValue, callback) => {
+  async function loadStudents(inputValue) {
+    console.tron.log('loadStudents');
     const response = await api.get('students', {
-      params: { q: inputValue, page: 1, limit: 100 },
+      params: {q: inputValue, page: 1, limit: 100},
     });
 
-    const _students = response.data.records.map(student => ({
+    return response.data.records.map(student => ({
       label: student.name,
       value: student.id,
     }));
+  }
 
-    callback(_students);
-  };
+  const totalPriceFormatted = useMemo(() => {
+    if (selectedPlan) {
+      return formatPrice(selectedPlan.duration * selectedPlan.price);
+    }
+    return '';
+  }, [selectedPlan]);
+
+  const endDate = useMemo(() => {
+    if (selectedPlan) {
+      return addMonths(startDate, selectedPlan.duration);
+    }
+    return '';
+  }, [selectedPlan, startDate]);
 
   return (
     <Container>
@@ -156,63 +177,62 @@ export default function EditForm({ match }) {
       </header>
       {/** onChange={e => setSelectedPlan(Number(e.target.value))} */}
 
-      <Form id="subscriptionForm" initialData={record} onSubmit={handleSubmit}>
-        <content>
-          <AsyncSelect
-            name="student_id"
-            cacheOptions
-            loadOptions={loadOptions}
-            defaultOptions
-            label="ALUNO"
-          />
-
-          <table className="formInputs">
-            <tbody>
-              <tr>
-                <td>
-                  <Select
-                    placeholder="Selecione o plano"
-                    name="plan_id"
-                    options={plans}
-                    label="PLANO"
-                    onChange={setSelectedPlan}
-                  />
-                </td>
-                <td>
-                  <label htmlFor="start_date">DATA DE INÍCIO</label>
-                  <DatePicker
-                    dateFormat="dd/MM/yyyy"
-                    name="start_date"
-                    selected={startDate}
-                    onChange={date => setStartDate(date)}
-                    locale="pt"
-                  />
-                </td>
-                <td>
-                  <label htmlFor="end_date">DATA DE TÉRMINO</label>
-                  <DatePicker
-                    dateFormat="dd/MM/yyyy"
-                    name="end_date"
-                    selected={endDate}
-                    onChange={date => setEndDate(date)}
-                    disabled
-                    locale="pt"
-                    className="disableInput"
-                  />
-                </td>
-                <td>
-                  <Input
-                    name="totalPriceFormatted"
-                    label="VALOR FINAL"
-                    disabled
-                    className="disableInput"
-                    value={selectedPlan && selectedPlan.totalPriceFormatted}
-                  />
-                </td>
-              </tr>
-            </tbody>
-          </table>
-        </content>
+      <Form id="subscriptionForm" schema={schema} onSubmit={handleSubmit}>
+        <AsyncSelect
+          id="student_id"
+          name="student_id"
+          placeholder="Selecione o aluno"
+          loadOptions={loadStudents}
+          label="ALUNO"
+          value={selectedStudent}
+          onChange={setSelectedStudent}
+        />
+        <table>
+          <tbody>
+            <tr>
+              <td>
+                <Select
+                  placeholder="Selecione o plano"
+                  name="plan_id"
+                  options={plans}
+                  label="PLANO"
+                  onChange={setSelectedPlan}
+                  value={selectedPlan}
+                />
+              </td>
+              <td>
+                <DatePicker
+                  dateFormat="dd/MM/yyyy"
+                  name="start_date"
+                  selected={startDate}
+                  onChange={date => setStartDate(date)}
+                  locale="pt"
+                  label="DATA DE INÍCIO"
+                />
+              </td>
+              <td>
+                <DatePicker
+                  dateFormat="dd/MM/yyyy"
+                  name="end_date"
+                  selected={endDate}
+                  disabled
+                  locale="pt"
+                  className="disableInput"
+                  label="DATA DE TÉRMINO"
+                />
+              </td>
+              <td>
+                <Input
+                  name="totalPriceFormatted"
+                  label="VALOR FINAL"
+                  disabled
+                  className="disableInput"
+                  value={totalPriceFormatted}
+                />
+              </td>
+            </tr>
+          </tbody>
+        </table>
       </Form>
     </Container>
   );
