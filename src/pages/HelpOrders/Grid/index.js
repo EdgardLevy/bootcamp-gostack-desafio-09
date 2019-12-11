@@ -1,19 +1,19 @@
 import React, {useState, useEffect} from 'react';
-import {MdAdd, MdEdit, MdDelete} from 'react-icons/md';
+import {MdReply} from 'react-icons/md';
 import swal from 'sweetalert';
 import {toast} from 'react-toastify';
+import {format, parseISO} from 'date-fns';
+import pt from 'date-fns/locale/pt';
 import history from '~/services/history';
 import {Container} from '../styles';
-import {PrimaryButton, PaginateButton, ActionButton} from '~/components/Button';
+import {PaginateButton, ActionButton} from '~/components/Button';
 import api from '~/services/api';
-import {formatPrice} from '~/util/format';
 
 let tmrDebounceEvent = null;
-const LIMIT_RECORDS_PER_PAGE = 5;
-const path = 'plans';
+const LIMIT_RECORDS_PER_PAGE = 10;
+const path = 'help-orders';
 
 export default function Grid() {
-  const [searchText, setSearchText] = useState('');
   const [data, setData] = useState({
     records: [],
     meta: {has_prev: false, has_next: false, total_pages: 0, total_records: 0},
@@ -30,44 +30,45 @@ export default function Grid() {
   useEffect(() => {
     async function loadRecords() {
       const response = await api.get(path, {
-        params: {q: searchText, page, limit: LIMIT_RECORDS_PER_PAGE},
+        params: {page, limit: LIMIT_RECORDS_PER_PAGE},
       });
-
       response.data.records.map(item => {
-        item.durationFormatted =
-          item.duration === 1
-            ? `${item.duration} mês`
-            : `${item.duration} meses`;
-        item.priceFormatted = formatPrice(item.price);
+        item.createdAtFormatted = format(
+          parseISO(item.created_at),
+          "d 'de' MMMM 'de' yyyy",
+          {
+            locale: pt,
+          }
+        );
       });
-
       setData(response.data);
     }
 
     debounce(loadRecords, null, 300);
-  }, [page, searchText]);
+  }, [page]);
 
   function confirmDelete(id) {
-    console.tron.log(id);
-    const _plan = data.records.find(plan => plan.id === id);
+    const _subscription = data.records.find(
+      subscription => subscription.id === id
+    );
     swal({
-      text: `Deseja excluir o plano ${_plan.title} ?`,
+      text: `Deseja excluir a matrícula do aluno ${_subscription.student.name} ?`,
       icon: 'warning',
       dangerMode: true,
       buttons: ['Não', 'Sim'],
     }).then(async willDelete => {
       if (willDelete) {
         try {
-          await api.delete(`${path}/${_plan.id}`);
+          await api.delete(`subscriptions/${_subscription.id}`);
 
           const _data = {...data};
           _data.records.splice(
-            data.records.findIndex(item => item.id === _plan.id),
+            data.records.findIndex(item => item.id === _subscription.id),
             1
           );
           setData(_data);
 
-          toast.success('Plano excluído com sucesso');
+          toast.success('Matrícula excluída com sucesso');
         } catch (error) {
           toast.error('Falha na exclusão, entre em contato com o suporte');
         }
@@ -97,70 +98,32 @@ export default function Grid() {
   return (
     <Container>
       <header>
-        <strong>Gerenciando planos</strong>
-        <div>
-          <aside>
-            <PrimaryButton
-              type="button"
-              onClick={() => {
-                history.push(`/${path}/create`);
-              }}>
-              <MdAdd color="#fff" size={20} />
-              <span>CADASTRAR</span>
-            </PrimaryButton>
-            <input
-              type="text"
-              id="search"
-              placeholder="Buscar plano"
-              onChange={e => {
-                setPage(1);
-                setSearchText(e.target.value);
-              }}
-            />
-          </aside>
-        </div>
+        <strong>Pedidos de auxílio</strong>
       </header>
       <div className="totalRecords">
         <span>{`Total de registros: ${data.meta.total_records}`}</span>
       </div>
-      <table>
+      <table className="grid">
         <thead>
           <tr>
-            <th width="390">TÍTULO</th>
-            <th width="390">DURAÇÃO</th>
-            <th width="150" className="center">
-              VALOR p/ MÊS
-            </th>
-            <th width="80" />
+            <th>ALUNO</th>
             <th width="80" />
           </tr>
         </thead>
         <tbody>
-          {data.records.map(plan => {
+          {data.records.map(helpOrder => {
             return (
-              <tr key={plan.id}>
-                <td>{plan.title}</td>
-                <td>{plan.durationFormatted}</td>
-                <td className="center">{plan.priceFormatted}</td>
+              <tr key={helpOrder.id}>
+                <td>{helpOrder.student.name}</td>
+
                 <td className="center">
                   <ActionButton
                     type="button"
                     title="editar"
                     onClick={() => {
-                      history.push(`${path}/${plan.id}`);
+                      history.push(`subscriptions/${helpOrder.id}`);
                     }}>
-                    <MdEdit size={20} color="#fb6f91" />
-                  </ActionButton>
-                </td>
-
-                <td className="center delete">
-                  <ActionButton
-                    type="button"
-                    title="deletar"
-                    onClick={() => {
-                      confirmDelete(plan.id);
-                    }}>
-                    <MdDelete size={20} color="#fb6f91" />
+                    <MdReply size={20} color="#fb6f91" />
                   </ActionButton>
                 </td>
               </tr>

@@ -16,6 +16,8 @@ import PlansForm from '~/pages/Plans/Form';
 import SubscriptionsGrid from '~/pages/Subscriptions/Grid';
 import SubscriptionsForm from '~/pages/Subscriptions/Form';
 
+import HelpOrdersGrid from '~/pages/HelpOrders/Grid';
+
 export default function Routes() {
   return (
     <Switch>
@@ -50,9 +52,7 @@ export default function Routes() {
         isPrivate
       />
 
-      {/** Exemplo de rota de 404
-      <Route path="/" component={() => <h1>404</h1>} />
-       */}
+      <Route path="/helporders" exact component={HelpOrdersGrid} isPrivate />
     </Switch>
   );
 }

@@ -11,6 +11,7 @@ import api from '~/services/api';
 
 let tmrDebounceEvent = null;
 const LIMIT_RECORDS_PER_PAGE = 5;
+const path = 'subscriptions';
 
 export default function Grid() {
   const [data, setData] = useState({
@@ -30,7 +31,7 @@ export default function Grid() {
 
   useEffect(() => {
     async function loadRecords() {
-      const response = await api.get('subscriptions', {
+      const response = await api.get(path, {
         params: {page, limit: LIMIT_RECORDS_PER_PAGE},
       });
       response.data.records.map(item => {
@@ -67,7 +68,7 @@ export default function Grid() {
     }).then(async willDelete => {
       if (willDelete) {
         try {
-          await api.delete(`subscriptions/${_subscription.id}`);
+          await api.delete(`${path}/${_subscription.id}`);
 
           const _data = {...data};
           _data.records.splice(
@@ -112,7 +113,7 @@ export default function Grid() {
             <PrimaryButton
               type="button"
               onClick={() => {
-                history.push('/subscriptions/create');
+                history.push(`/${path}/create`);
               }}>
               <MdAdd color="#fff" size={20} />
               <span>CADASTRAR</span>
@@ -153,7 +154,7 @@ export default function Grid() {
                     type="button"
                     title="editar"
                     onClick={() => {
-                      history.push(`subscriptions/${subscription.id}`);
+                      history.push(`${path}/${subscription.id}`);
                     }}>
                     <MdEdit size={20} color="#fb6f91" />
                   </ActionButton>

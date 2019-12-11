@@ -9,6 +9,7 @@ import api from '~/services/api';
 
 let tmrDebounceEvent = null;
 const LIMIT_RECORDS_PER_PAGE = 5;
+const path = 'students';
 
 export default function Grid() {
   const [searchText, setSearchText] = useState('');
@@ -29,7 +30,7 @@ export default function Grid() {
 
   useEffect(() => {
     async function loadRecords() {
-      const response = await api.get('students', {
+      const response = await api.get(path, {
         params: {q: searchText, page, limit: LIMIT_RECORDS_PER_PAGE},
       });
 
@@ -49,7 +50,7 @@ export default function Grid() {
     }).then(async willDelete => {
       if (willDelete) {
         try {
-          await api.delete(`students/${_student.id}`);
+          await api.delete(`${path}/${_student.id}`);
 
           const _data = {...data};
           _data.records.splice(
@@ -94,7 +95,7 @@ export default function Grid() {
             <PrimaryButton
               type="button"
               onClick={() => {
-                history.push('/students/create');
+                history.push(`/${path}/create`);
               }}>
               <MdAdd color="#fff" size={20} />
               <span>CADASTRAR</span>
@@ -138,7 +139,7 @@ export default function Grid() {
                     type="button"
                     title="editar"
                     onClick={() => {
-                      history.push(`students/${student.id}`);
+                      history.push(`${path}/${student.id}`);
                     }}>
                     <MdEdit size={20} color="#fb6f91" />
                   </ActionButton>
