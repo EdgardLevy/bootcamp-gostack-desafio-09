@@ -4,24 +4,6 @@ export const Container = styled.div`
   max-width: 700px;
   margin: 50px auto;
 
-  header {
-    display: flex;
-    padding: 15px 0;
-    justify-content: space-between;
-
-    strong {
-      font-size: 24px;
-    }
-
-    aside {
-      display: flex;
-    }
-
-    input {
-      margin-left: 5px;
-    }
-  }
-
   form {
     margin-top: 20px;
     background: #fff;
@@ -106,7 +88,7 @@ export const Container = styled.div`
     justify-content: flex-end;
     align-items: center;
 
-    div {
+    > div {
       display: flex;
       flex-direction: column;
       margin-top: 3px;

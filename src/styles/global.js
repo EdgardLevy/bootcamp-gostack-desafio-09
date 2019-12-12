@@ -35,24 +35,6 @@ export default createGlobalStyle`
     cursor: pointer;
   }
 
-  header {
-    display: flex;
-    padding: 15px 0;
-    justify-content: space-between;
-
-    strong {
-      font-size: 24px;
-    }
-
-    aside {
-      display: flex;
-    }
-
-    input {
-      margin-left: 5px;
-    }
-  }
-
   .disableInput {
     background: #ddd;
     color: #000;

@@ -20,7 +20,7 @@ export default function Grid() {
     meta: {has_prev: false, has_next: false, total_pages: 0, total_records: 0},
   });
   const [page, setPage] = useState(1);
-  const [helpOrderId, setHelpOrderId] = useState(null);
+  const [helpOrderId, setHelpOrderId] = useState(1);
 
   const helpOrder = useMemo(() => {
     if (!helpOrderId) return;

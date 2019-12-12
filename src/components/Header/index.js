@@ -21,7 +21,6 @@ export default function Header() {
         <nav>
           <img src={logo} alt="GymPoint" />
           <span>GYMPOINT</span>
-          <Link to="/dashboard">DASHBOARD</Link>
           <Link to="/students">ALUNOS</Link>
           <Link to="/plans">PLANOS</Link>
           <Link to="/subscriptions">MATRÍCULAS</Link>

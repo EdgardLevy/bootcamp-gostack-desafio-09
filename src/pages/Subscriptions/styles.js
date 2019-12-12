@@ -20,6 +20,9 @@ export const Container = styled.div`
     input {
       margin-left: 5px;
     }
+    button {
+      margin-left: 5px;
+    }
   }
 
   form {
@@ -31,7 +34,7 @@ export const Container = styled.div`
       font-weight: bold;
       /* background: blue; */
     }
-    span {
+    > span {
       color: #fb6f91;
       align-self: flex-start;
       margin: 0 0 10px;
@@ -106,7 +109,7 @@ export const Container = styled.div`
     justify-content: flex-end;
     align-items: center;
 
-    div {
+    > div {
       display: flex;
       flex-direction: column;
       margin-top: 3px;

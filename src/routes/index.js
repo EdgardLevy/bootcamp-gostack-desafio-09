@@ -5,7 +5,6 @@ import Route from './Route';
 
 import SingIn from '~/pages/SingIn';
 import SingUp from '~/pages/SingUp';
-import Dashboard from '~/pages/Dashboard';
 
 import StudentsGrid from '~/pages/Students/Grid';
 import StudentsForm from '~/pages/Students/Form';
@@ -23,7 +22,6 @@ export default function Routes() {
     <Switch>
       <Route path="/" exact component={SingIn} />
       <Route path="/register" component={SingUp} />
-      <Route path="/dashboard" component={Dashboard} isPrivate />
 
       <Route path="/students" exact component={StudentsGrid} isPrivate />
       <Route path="/students/create" exact component={StudentsForm} isPrivate />

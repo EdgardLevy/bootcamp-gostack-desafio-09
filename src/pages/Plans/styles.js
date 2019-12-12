@@ -3,7 +3,26 @@ import styled from 'styled-components';
 export const Container = styled.div`
   max-width: 900px;
   margin: 50px auto;
+  header {
+    display: flex;
+    padding: 15px 0;
+    justify-content: space-between;
 
+    strong {
+      font-size: 24px;
+    }
+
+    aside {
+      display: flex;
+    }
+
+    input {
+      margin-left: 5px;
+    }
+    button {
+      margin-left: 5px;
+    }
+  }
   form {
     content {
       display: flex;

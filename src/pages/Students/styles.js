@@ -20,6 +20,9 @@ export const Container = styled.div`
     input {
       margin-left: 5px;
     }
+    button {
+      margin-left: 5px;
+    }
   }
 
   form {

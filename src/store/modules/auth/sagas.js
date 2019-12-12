@@ -20,7 +20,7 @@ export function* singIn({payload}) {
 
     yield put(signInSucess(token, user));
 
-    history.push('/dashboard');
+    history.push('/students');
   } catch (error) {
     toast.error('Falha na autenticação, verifique seus dados');
     console.tron.log(error);

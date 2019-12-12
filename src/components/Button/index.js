@@ -6,22 +6,19 @@ export const Button = styled.button`
   height: 35px;
   border: 0;
   border-radius: 4px;
-  margin-left: 5px;
-  color: #fff;
+  color: #ffffff;
   background: #ee4d64;
-
   display: flex;
   align-items: center;
   transition: background 0.2s;
   &:hover {
     background: ${darken(0.03, '#ee4d64')};
   }
-  svg {
+  > svg {
     margin-right: 5px;
   }
-  span {
-    flex: 1;
-    text-align: center;
+  > span {
+    color: #ffffff !important;
     font-weight: bold;
   }
   ${props =>

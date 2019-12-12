@@ -12,18 +12,14 @@ export default function RouterWrapper({
   ...rest
 }) {
   const {signed} = store.getState().auth;
-  // se o usuario n estiver logado e a rota for privada
-  // entao redireciona para a login
+
   if (!signed && isPrivate) {
     return <Redirect to="/" />;
   }
-  // se o usuario ta logado e a rota nao eh privada
-  // entao redireciona para o dashboard
   if (signed && !isPrivate) {
-    return <Redirect to="/dashboard" />;
+    return <Redirect to="/students" />;
   }
   const Layout = signed ? DefaultLayout : AuthLayout;
-  // se n tiver nenhum redirecionamento entao acessa a rota desejada
   return (
     <Route
       {...rest}
