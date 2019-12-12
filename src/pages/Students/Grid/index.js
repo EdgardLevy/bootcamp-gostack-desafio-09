@@ -57,6 +57,7 @@ export default function Grid() {
             data.records.findIndex(item => item.id === _student.id),
             1
           );
+          _data.meta.total_records -= 1;
           setData(_data);
 
           toast.success('Aluno excluído com sucesso');

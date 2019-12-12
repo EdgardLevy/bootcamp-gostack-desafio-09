@@ -1,12 +1,12 @@
-import React, {useState, useEffect} from 'react';
-import {MdAdd, MdEdit, MdDelete} from 'react-icons/md';
+import React, { useState, useEffect } from 'react';
+import { MdAdd, MdEdit, MdDelete } from 'react-icons/md';
 import swal from 'sweetalert';
-import {toast} from 'react-toastify';
+import { toast } from 'react-toastify';
 import history from '~/services/history';
-import {Container} from '../styles';
-import {PrimaryButton, PaginateButton, ActionButton} from '~/components/Button';
+import { Container } from '../styles';
+import { PrimaryButton, PaginateButton, ActionButton } from '~/components/Button';
 import api from '~/services/api';
-import {formatPrice} from '~/util/format';
+import { formatPrice } from '~/util/format';
 
 let tmrDebounceEvent = null;
 const LIMIT_RECORDS_PER_PAGE = 5;
@@ -16,7 +16,7 @@ export default function Grid() {
   const [searchText, setSearchText] = useState('');
   const [data, setData] = useState({
     records: [],
-    meta: {has_prev: false, has_next: false, total_pages: 0, total_records: 0},
+    meta: { has_prev: false, has_next: false, total_pages: 0, total_records: 0 },
   });
   const [page, setPage] = useState(1);
 
@@ -30,7 +30,7 @@ export default function Grid() {
   useEffect(() => {
     async function loadRecords() {
       const response = await api.get(path, {
-        params: {q: searchText, page, limit: LIMIT_RECORDS_PER_PAGE},
+        params: { q: searchText, page, limit: LIMIT_RECORDS_PER_PAGE },
       });
 
       response.data.records.map(item => {
@@ -60,11 +60,12 @@ export default function Grid() {
         try {
           await api.delete(`${path}/${_plan.id}`);
 
-          const _data = {...data};
+          const _data = { ...data };
           _data.records.splice(
             data.records.findIndex(item => item.id === _plan.id),
             1
           );
+          _data.meta.total_records -= 1;
           setData(_data);
 
           toast.success('Plano excluído com sucesso');

@@ -34,7 +34,7 @@ export const Container = styled.div`
     }
 
     > button {
-      margin-top: 5px;
+      margin-top: 20px;
       height: 45px;
       font-size: 16px;
       align-items: center;

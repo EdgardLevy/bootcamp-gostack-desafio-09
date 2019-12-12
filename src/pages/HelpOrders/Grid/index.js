@@ -2,13 +2,12 @@ import React, {useState, useEffect, useMemo} from 'react';
 import {MdReply} from 'react-icons/md';
 import swal from 'sweetalert';
 import {toast} from 'react-toastify';
-import {format, parseISO, setISODay} from 'date-fns';
+import {format, parseISO} from 'date-fns';
 import pt from 'date-fns/locale/pt';
-import history from '~/services/history';
 import {Container} from '../styles';
 import {PaginateButton, ActionButton} from '~/components/Button';
 import api from '~/services/api';
-import AnswerForm from '../componets/AnswerForm';
+import AnswerForm from '../AnswerForm';
 
 let tmrDebounceEvent = null;
 const LIMIT_RECORDS_PER_PAGE = 10;
@@ -20,7 +19,7 @@ export default function Grid() {
     meta: {has_prev: false, has_next: false, total_pages: 0, total_records: 0},
   });
   const [page, setPage] = useState(1);
-  const [helpOrderId, setHelpOrderId] = useState(1);
+  const [helpOrderId, setHelpOrderId] = useState(0);
 
   const helpOrder = useMemo(() => {
     if (!helpOrderId) return;
@@ -54,35 +53,6 @@ export default function Grid() {
     debounce(loadRecords, null, 300);
   }, [page]);
 
-  function confirmDelete(id) {
-    const _subscription = data.records.find(
-      subscription => subscription.id === id
-    );
-    swal({
-      text: `Deseja excluir a matrícula do aluno ${_subscription.student.name} ?`,
-      icon: 'warning',
-      dangerMode: true,
-      buttons: ['Não', 'Sim'],
-    }).then(async willDelete => {
-      if (willDelete) {
-        try {
-          await api.delete(`subscriptions/${_subscription.id}`);
-
-          const _data = {...data};
-          _data.records.splice(
-            data.records.findIndex(item => item.id === _subscription.id),
-            1
-          );
-          setData(_data);
-
-          toast.success('Matrícula excluída com sucesso');
-        } catch (error) {
-          toast.error('Falha na exclusão, entre em contato com o suporte');
-        }
-      }
-    });
-  }
-
   function renderPages() {
     if (data.meta.total_pages === 1) return;
     const pages = [];
@@ -102,14 +72,34 @@ export default function Grid() {
     return pages;
   }
 
-  function closePopUp() {
-    console.tron.log('closePopUp');
-    setHelpOrderId(null);
+  async function handleFormSubmit(id, answer) {
+    console.tron.log('handleFormSubmit', data);
+
+    try {
+      await api.post(`${path}/${id}/answer`, {answer});
+
+      const _data = {...data};
+      _data.records.splice(
+        data.records.findIndex(item => item.id === id),
+        1
+      );
+      _data.meta.total_records -= 1;
+      setData(_data);
+      setHelpOrderId(null);
+      toast.success('Pedido de auxílio respondido com sucesso');
+    } catch (error) {
+      toast.error('Falha no envio da resposta, entre em contato com o suporte');
+    }
   }
 
   return (
     <Container>
-      <AnswerForm helpOrder={helpOrder} onClose={closePopUp} />
+      <AnswerForm
+        isOpen={helpOrder}
+        helpOrder={helpOrder}
+        onClose={() => setHelpOrderId(null)}
+        onFormSubmit={handleFormSubmit}
+      />
       <header>
         <strong>Pedidos de auxílio</strong>
       </header>

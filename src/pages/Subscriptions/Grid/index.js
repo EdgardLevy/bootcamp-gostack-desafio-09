@@ -75,6 +75,7 @@ export default function Grid() {
             data.records.findIndex(item => item.id === _subscription.id),
             1
           );
+          _data.meta.total_records -= 1;
           setData(_data);
 
           toast.success('Matrícula excluída com sucesso');
