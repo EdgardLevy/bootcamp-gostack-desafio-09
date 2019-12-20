@@ -1,12 +1,12 @@
-import React, { useState, useEffect } from 'react';
-import { MdAdd, MdEdit, MdDelete } from 'react-icons/md';
+import React, {useState, useEffect} from 'react';
+import {MdAdd, MdEdit, MdDelete} from 'react-icons/md';
 import swal from 'sweetalert';
-import { toast } from 'react-toastify';
+import {toast} from 'react-toastify';
 import history from '~/services/history';
-import { Container } from '../styles';
-import { PrimaryButton, PaginateButton, ActionButton } from '~/components/Button';
+import {Container} from '../styles';
+import {PrimaryButton, PaginateButton, ActionButton} from '~/components/Button';
 import api from '~/services/api';
-import { formatPrice } from '~/util/format';
+import {formatPrice} from '~/util/format';
 
 let tmrDebounceEvent = null;
 const LIMIT_RECORDS_PER_PAGE = 5;
@@ -16,7 +16,7 @@ export default function Grid() {
   const [searchText, setSearchText] = useState('');
   const [data, setData] = useState({
     records: [],
-    meta: { has_prev: false, has_next: false, total_pages: 0, total_records: 0 },
+    meta: {has_prev: false, has_next: false, total_pages: 0, total_records: 0},
   });
   const [page, setPage] = useState(1);
 
@@ -30,14 +30,14 @@ export default function Grid() {
   useEffect(() => {
     async function loadRecords() {
       const response = await api.get(path, {
-        params: { q: searchText, page, limit: LIMIT_RECORDS_PER_PAGE },
+        params: {q: searchText, page, limit: LIMIT_RECORDS_PER_PAGE},
       });
 
       response.data.records.map(item => {
         item.durationFormatted =
           item.duration === 1
-            ? `${item.duration} mês`
-            : `${item.duration} meses`;
+            ? `${item.duration} month`
+            : `${item.duration} months`;
         item.priceFormatted = formatPrice(item.price);
       });
 
@@ -51,16 +51,16 @@ export default function Grid() {
     console.tron.log(id);
     const _plan = data.records.find(plan => plan.id === id);
     swal({
-      text: `Deseja excluir o plano ${_plan.title} ?`,
+      text: `Do you want to delete the plan ${_plan.title} ?`,
       icon: 'warning',
       dangerMode: true,
-      buttons: ['Não', 'Sim'],
+      buttons: ['No', 'Yes'],
     }).then(async willDelete => {
       if (willDelete) {
         try {
           await api.delete(`${path}/${_plan.id}`);
 
-          const _data = { ...data };
+          const _data = {...data};
           _data.records.splice(
             data.records.findIndex(item => item.id === _plan.id),
             1
@@ -68,9 +68,9 @@ export default function Grid() {
           _data.meta.total_records -= 1;
           setData(_data);
 
-          toast.success('Plano excluído com sucesso');
+          toast.success('Plan successfully deleted');
         } catch (error) {
-          toast.error('Falha na exclusão, entre em contato com o suporte');
+          toast.error('Delete failed, contact support');
         }
       }
     });
@@ -79,6 +79,7 @@ export default function Grid() {
   function renderPages() {
     if (data.meta.total_pages === 1) return;
     const pages = [];
+    // eslint-disable-next-line no-plusplus
     for (let idxpage = 1; idxpage <= data.meta.total_pages; idxpage++) {
       const b = (
         <PaginateButton
@@ -98,7 +99,7 @@ export default function Grid() {
   return (
     <Container>
       <header>
-        <strong>Gerenciando planos</strong>
+        <strong>Managing plans</strong>
         <div>
           <aside>
             <PrimaryButton
@@ -107,12 +108,12 @@ export default function Grid() {
                 history.push(`/${path}/create`);
               }}>
               <MdAdd color="#fff" size={20} />
-              <span>CADASTRAR</span>
+              <span>REGISTER</span>
             </PrimaryButton>
             <input
               type="text"
               id="search"
-              placeholder="Buscar plano"
+              placeholder="Search plan"
               onChange={e => {
                 setPage(1);
                 setSearchText(e.target.value);
@@ -122,15 +123,15 @@ export default function Grid() {
         </div>
       </header>
       <div className="totalRecords">
-        <span>{`Total de registros: ${data.meta.total_records}`}</span>
+        <span>{`Total records: ${data.meta.total_records}`}</span>
       </div>
       <table>
         <thead>
           <tr>
-            <th width="390">TÍTULO</th>
-            <th width="390">DURAÇÃO</th>
+            <th width="390">TITLE</th>
+            <th width="390">DURATION</th>
             <th width="150" className="center">
-              VALOR p/ MÊS
+              MONTHLY FEE
             </th>
             <th width="80" />
             <th width="80" />
@@ -146,7 +147,7 @@ export default function Grid() {
                 <td className="center">
                   <ActionButton
                     type="button"
-                    title="editar"
+                    title="edit"
                     onClick={() => {
                       history.push(`${path}/${plan.id}`);
                     }}>
@@ -157,7 +158,7 @@ export default function Grid() {
                 <td className="center delete">
                   <ActionButton
                     type="button"
-                    title="deletar"
+                    title="delete"
                     onClick={() => {
                       confirmDelete(plan.id);
                     }}>

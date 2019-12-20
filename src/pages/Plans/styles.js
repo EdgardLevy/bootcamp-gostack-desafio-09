@@ -18,6 +18,7 @@ export const Container = styled.div`
 
     input {
       margin-left: 5px;
+      padding-left: 15px;
     }
     button {
       margin-left: 5px;

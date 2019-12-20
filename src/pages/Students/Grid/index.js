@@ -20,10 +20,8 @@ export default function Grid() {
   const [page, setPage] = useState(1);
 
   function debounce(event, param, ms) {
-    console.tron.log('debounce');
     if (tmrDebounceEvent) clearTimeout(tmrDebounceEvent);
     tmrDebounceEvent = setTimeout(() => {
-      console.tron.log('debounce timeout');
       event(param);
     }, ms);
   }
@@ -43,10 +41,10 @@ export default function Grid() {
   function confirmDelete(id) {
     const _student = data.records.find(student => student.id === id);
     swal({
-      text: `Deseja excluir o aluno ${_student.name} ?`,
+      text: `Do you want to delete the student ${_student.name} ?`,
       icon: 'warning',
       dangerMode: true,
-      buttons: ['Não', 'Sim'],
+      buttons: ['No', 'Yes'],
     }).then(async willDelete => {
       if (willDelete) {
         try {
@@ -60,9 +58,9 @@ export default function Grid() {
           _data.meta.total_records -= 1;
           setData(_data);
 
-          toast.success('Aluno excluído com sucesso');
+          toast.success('Student successfully deleted');
         } catch (error) {
-          toast.error('Falha na exclusão, entre em contato com o suporte');
+          toast.error('Delete failed, contact support');
         }
       }
     });
@@ -90,7 +88,7 @@ export default function Grid() {
   return (
     <Container>
       <header>
-        <strong>Gerenciando alunos</strong>
+        <strong>Managing students</strong>
         <div>
           <aside>
             <PrimaryButton
@@ -99,12 +97,12 @@ export default function Grid() {
                 history.push(`/${path}/create`);
               }}>
               <MdAdd color="#fff" size={20} />
-              <span>CADASTRAR</span>
+              <span>REGISTER</span>
             </PrimaryButton>
             <input
               type="text"
               id="search"
-              placeholder="Buscar aluno"
+              placeholder="Search student"
               onChange={e => {
                 setPage(1);
                 setSearchText(e.target.value);
@@ -114,15 +112,15 @@ export default function Grid() {
         </div>
       </header>
       <div className="totalRecords">
-        <span>{`Total de registros: ${data.meta.total_records}`}</span>
+        <span>{`Total records: ${data.meta.total_records}`}</span>
       </div>
       <table>
         <thead>
           <tr>
-            <th width="390">NOME</th>
+            <th width="390">NAME</th>
             <th width="390">E-MAIL</th>
             <th width="150" className="center">
-              IDADE
+              AGE
             </th>
             <th width="80" />
             <th width="80" />
@@ -138,7 +136,7 @@ export default function Grid() {
                 <td className="center">
                   <ActionButton
                     type="button"
-                    title="editar"
+                    title="edit"
                     onClick={() => {
                       history.push(`${path}/${student.id}`);
                     }}>
@@ -149,7 +147,7 @@ export default function Grid() {
                 <td className="center delete">
                   <ActionButton
                     type="button"
-                    title="deletar"
+                    title="delete"
                     onClick={() => {
                       confirmDelete(student.id);
                     }}>

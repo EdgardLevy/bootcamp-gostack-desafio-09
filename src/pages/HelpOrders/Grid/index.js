@@ -1,6 +1,6 @@
 import React, {useState, useEffect, useMemo} from 'react';
 import {MdReply} from 'react-icons/md';
-import swal from 'sweetalert';
+
 import {toast} from 'react-toastify';
 import {format, parseISO} from 'date-fns';
 import pt from 'date-fns/locale/pt';
@@ -56,6 +56,7 @@ export default function Grid() {
   function renderPages() {
     if (data.meta.total_pages === 1) return;
     const pages = [];
+    // eslint-disable-next-line no-plusplus
     for (let idxpage = 1; idxpage <= data.meta.total_pages; idxpage++) {
       const b = (
         <PaginateButton
@@ -104,12 +105,13 @@ export default function Grid() {
         <strong>Pedidos de auxílio</strong>
       </header>
       <div className="totalRecords">
-        <span>{`Total de registros: ${data.meta.total_records}`}</span>
+        <span>{`Total records: ${data.meta.total_records}`}</span>
       </div>
       <table className="grid">
         <thead>
           <tr>
-            <th>ALUNO</th>
+            <th>Student</th>
+            <th>Question</th>
             <th width="80" />
           </tr>
         </thead>
@@ -118,11 +120,12 @@ export default function Grid() {
             return (
               <tr key={helpOrder.id}>
                 <td>{helpOrder.student.name}</td>
+                <td>{helpOrder.question}</td>
 
                 <td className="center">
                   <ActionButton
                     type="button"
-                    title="responder"
+                    title="reply"
                     onClick={() => {
                       // history.push(`subscriptions/${helpOrder.id}`);
                       setHelpOrderId(helpOrder.id);

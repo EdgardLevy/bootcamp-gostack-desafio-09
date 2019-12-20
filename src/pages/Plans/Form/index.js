@@ -13,20 +13,20 @@ import api from '~/services/api';
 const schema = Yup.object().shape({
   title: Yup.string()
     .required()
-    .min(3, 'O título do plano precisa conter 3 caracteres'),
+    .min(3),
   duration: Yup.number()
-    .required('A duração é obrigatória')
-    .min(1, 'Informe a duração com valor maior ou igual a 1')
-    .typeError('Informe um valor válido para a duração'),
+    .required()
+    .min(1)
+    .typeError('Enter a valid value for duration'),
   price: Yup.number()
-    .required('O preço é obrigatório')
-    .typeError('Informe um valor válido para o preço'),
+    .required()
+    .typeError('Enter a valid value for price'),
 });
 
 export default function EditForm({match}) {
   const id = useMemo(() => match.params.id, [match.params]);
   const mode = id === undefined ? 'create' : 'update';
-  const titleMode = id === undefined ? 'Cadastro' : 'Edição';
+  const titleMode = id === undefined ? 'Registration' : 'Edition';
 
   const [record, setRecord] = useState({});
   const [duration, setDuration] = useState(0);
@@ -84,7 +84,7 @@ export default function EditForm({match}) {
   return (
     <Container>
       <header>
-        <strong>{titleMode} de plano</strong>
+        <strong>Plan {titleMode}</strong>
         <div>
           <aside>
             <SecondaryButton
@@ -93,12 +93,12 @@ export default function EditForm({match}) {
                 history.push('/plans');
               }}>
               <MdKeyboardArrowLeft color="#fff" size={20} />
-              <span>VOLTAR</span>
+              <span>BACK</span>
             </SecondaryButton>
 
             <PrimaryButton type="submit" form="planForm">
               <MdAdd color="#fff" size={20} />
-              <span>SALVAR</span>
+              <span>SAVE</span>
             </PrimaryButton>
           </aside>
         </div>
@@ -109,26 +109,26 @@ export default function EditForm({match}) {
         schema={schema}
         onSubmit={handleSubmit}>
         <content>
-          <Input name="title" label="TÍTULO DO PLANO" />
+          <Input name="title" label="TITLE" />
           <div>
             <div>
               <Input
                 name="duration"
-                label="DURAÇÃO (em meses)"
+                label="DURATION (in months)"
                 onChange={e => handleDurationChange(e.target.value)}
               />
             </div>
             <div>
               <Input
                 name="price"
-                label="PREÇO MENSAL"
+                label="MONTHLY FEE"
                 onChange={e => handlePriceChange(e.target.value)}
               />
             </div>
             <div>
               <Input
                 name="totalPriceFormatted"
-                label="PREÇO TOTAL"
+                label="TOTAL PRICE"
                 className="disableInput"
                 disabled
               />

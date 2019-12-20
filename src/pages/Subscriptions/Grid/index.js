@@ -21,10 +21,8 @@ export default function Grid() {
   const [page, setPage] = useState(1);
 
   function debounce(event, param, ms) {
-    console.tron.log('debounce');
     if (tmrDebounceEvent) clearTimeout(tmrDebounceEvent);
     tmrDebounceEvent = setTimeout(() => {
-      console.tron.log('debounce timeout');
       event(param);
     }, ms);
   }
@@ -61,10 +59,10 @@ export default function Grid() {
       subscription => subscription.id === id
     );
     swal({
-      text: `Deseja excluir a matrícula do aluno ${_subscription.student.name} ?`,
+      text: `Do you want to delete the ${_subscription.student.name} student subscription?`,
       icon: 'warning',
       dangerMode: true,
-      buttons: ['Não', 'Sim'],
+      buttons: ['No', 'Yes'],
     }).then(async willDelete => {
       if (willDelete) {
         try {
@@ -78,9 +76,9 @@ export default function Grid() {
           _data.meta.total_records -= 1;
           setData(_data);
 
-          toast.success('Matrícula excluída com sucesso');
+          toast.success('Subscription successfully deleted');
         } catch (error) {
-          toast.error('Falha na exclusão, entre em contato com o suporte');
+          toast.error('Delete failed, contact support');
         }
       }
     });
@@ -89,6 +87,7 @@ export default function Grid() {
   function renderPages() {
     if (data.meta.total_pages === 1) return;
     const pages = [];
+    // eslint-disable-next-line no-plusplus
     for (let idxpage = 1; idxpage <= data.meta.total_pages; idxpage++) {
       const b = (
         <PaginateButton
@@ -108,7 +107,7 @@ export default function Grid() {
   return (
     <Container>
       <header>
-        <strong>Gerenciando matrículas</strong>
+        <strong>Managing subscriptions</strong>
         <div>
           <aside>
             <PrimaryButton
@@ -117,22 +116,22 @@ export default function Grid() {
                 history.push(`/${path}/create`);
               }}>
               <MdAdd color="#fff" size={20} />
-              <span>CADASTRAR</span>
+              <span>REGISTER</span>
             </PrimaryButton>
           </aside>
         </div>
       </header>
       <div className="totalRecords">
-        <span>{`Total de registros: ${data.meta.total_records}`}</span>
+        <span>{`Total records: ${data.meta.total_records}`}</span>
       </div>
       <table className="grid">
         <thead>
           <tr>
-            <th>ALUNO</th>
-            <th className="center">PLANO</th>
-            <th className="center">INÍCIO</th>
-            <th className="center">TÉRMINO</th>
-            <th className="center">ATIVA</th>
+            <th>STUDENT</th>
+            <th className="center">PLAN</th>
+            <th className="center">START DATE</th>
+            <th className="center">END DATE</th>
+            <th className="center">ACTIVE</th>
             <th width="80" />
             <th width="80" />
           </tr>
@@ -153,7 +152,7 @@ export default function Grid() {
                 <td className="center">
                   <ActionButton
                     type="button"
-                    title="editar"
+                    title="edit"
                     onClick={() => {
                       history.push(`${path}/${subscription.id}`);
                     }}>
@@ -164,7 +163,7 @@ export default function Grid() {
                 <td className="center delete">
                   <ActionButton
                     type="button"
-                    title="deletar"
+                    title="delete"
                     onClick={() => {
                       confirmDelete(subscription.id);
                     }}>

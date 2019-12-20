@@ -21,17 +21,17 @@ export default function Header() {
         <nav>
           <img src={logo} alt="GymPoint" />
           <span>GYMPOINT</span>
-          <Link to="/students">ALUNOS</Link>
-          <Link to="/plans">PLANOS</Link>
-          <Link to="/subscriptions">MATRÍCULAS</Link>
-          <Link to="/helporders">PEDIDOS DE AUXÍLIO</Link>
+          <Link to="/students">STUDENTS</Link>
+          <Link to="/plans">PLANS</Link>
+          <Link to="/subscriptions">SUBSCRIPTIONS</Link>
+          <Link to="/helporders">HELP ORDERS</Link>
         </nav>
         <aside>
           <Profile>
             <div>
               <strong>{profile.name}</strong>
               <button type="button" onClick={handleLogout}>
-                sair do sistema
+                logout
               </button>
             </div>
           </Profile>

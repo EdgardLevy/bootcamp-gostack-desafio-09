@@ -11,30 +11,30 @@ import api from '~/services/api';
 const schema = Yup.object().shape({
   name: Yup.string()
     .required()
-    .min(5, 'O nome precisa conter 5 caracteres'),
+    .min(5),
   email: Yup.string()
     .email()
-    .required('O email é obrigatório'),
+    .required(),
   age: Yup.number()
-    .required('Idade é obrigatória')
-    .min(0, 'Informe a com valor maior ou acima de 0 (zero)')
-    .typeError('Informe um valor válido para a idade'),
+    .required()
+    .min(0)
+    .typeError('Enter a valid value for age'),
   height: Yup.number()
-    .required('A altura é obrigatória')
-    .min(0, 'Informe o altura com valor acima de 0 (zero)')
-    .typeError('Informe um valor válido para a altura'),
+    .required()
+    .min(0)
+    .typeError('Enter a valid value for height'),
 
   weight: Yup.number()
-    .required('O peso é obrigatório')
-    .min(0, 'Informe o altura com valor acima de 0 (zero)')
-    .typeError('Informe um valor válido para o peso'),
+    .required()
+    .min(0)
+    .typeError('Enter a valid value for weight'),
 });
 
 export default function EditForm({match}) {
   console.tron.log(match);
   const {id} = match.params;
   const mode = id === undefined ? 'create' : 'update';
-  const titleMode = id === undefined ? 'Cadastro' : 'Edição';
+  const titleMode = id === undefined ? 'Registration' : 'Edition';
 
   const [record, setRecord] = useState(null);
 
@@ -77,7 +77,7 @@ export default function EditForm({match}) {
   return (
     <Container>
       <header>
-        <strong>{titleMode} de aluno</strong>
+        <strong>Student {titleMode}</strong>
         <div>
           <aside>
             <SecondaryButton
@@ -86,12 +86,12 @@ export default function EditForm({match}) {
                 history.push('/students');
               }}>
               <MdKeyboardArrowLeft color="#fff" size={20} />
-              <span>VOLTAR</span>
+              <span>BACK</span>
             </SecondaryButton>
 
             <PrimaryButton type="submit" form="studentForm">
               <MdAdd color="#fff" size={20} />
-              <span>SALVAR</span>
+              <span>SAVE</span>
             </PrimaryButton>
           </aside>
         </div>
@@ -102,28 +102,24 @@ export default function EditForm({match}) {
         schema={schema}
         onSubmit={handleSubmit}>
         <content>
-          <Input
-            name="name"
-            placeholder="Nome completo"
-            label="NOME COMPLETO"
-          />
+          <Input name="name" placeholder="Full name" label="NAME" />
 
           <Input
             type="email"
             name="email"
-            placeholder="exemplo@email.com"
-            label="ENDEREÇO DE E-EMAIL"
+            placeholder="email@provider.com"
+            label="E-MAIL"
           />
 
           <div>
             <div>
-              <Input name="age" label="IDADE" />
+              <Input name="age" label="AGE" />
             </div>
             <div>
-              <Input name="weight" label="PESO (em kg)" />
+              <Input name="weight" label="WEIGHT (kg)" />
             </div>
             <div>
-              <Input name="height" label="Altura" />
+              <Input name="height" label="HEIGHT" />
             </div>
           </div>
         </content>

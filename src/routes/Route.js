@@ -31,13 +31,12 @@ export default function RouterWrapper({
     />
   );
 }
-// tipo da propriedade
+
 RouterWrapper.propTypes = {
   isPrivate: PropTypes.bool,
-  // componente pode ser uma classe ou uma funcao
   component: PropTypes.oneOfType([PropTypes.element, PropTypes.func]),
 };
-// valor padrao da propriedade
+
 RouterWrapper.defaultProps = {
   isPrivate: false,
 };

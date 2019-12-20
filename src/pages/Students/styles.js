@@ -19,6 +19,7 @@ export const Container = styled.div`
 
     input {
       margin-left: 5px;
+      padding-left: 15px;
     }
     button {
       margin-left: 5px;
@@ -37,7 +38,7 @@ export const Container = styled.div`
         border: 1px solid #eee;
         border-radius: 4px;
         height: 44px;
-        padding: 0 15px;
+        padding: 15px 15px;
 
         margin: 0 0 10px;
         &::placeholder {
