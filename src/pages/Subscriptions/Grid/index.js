@@ -3,7 +3,6 @@ import {MdAdd, MdEdit, MdDelete, MdCheckCircle} from 'react-icons/md';
 import swal from 'sweetalert';
 import {toast} from 'react-toastify';
 import {format, parseISO} from 'date-fns';
-import pt from 'date-fns/locale/pt';
 import history from '~/services/history';
 import {Container} from '../styles';
 import {PrimaryButton, PaginateButton, ActionButton} from '~/components/Button';
@@ -35,17 +34,12 @@ export default function Grid() {
       response.data.records.map(item => {
         item.startDateFormatted = format(
           parseISO(item.start_date),
-          "d 'de' MMMM 'de' yyyy",
-          {
-            locale: pt,
-          }
+          "MMMM dd',' yyyy"
         );
+
         item.endDateFormatted = format(
           parseISO(item.end_date),
-          "d 'de' MMMM 'de' yyyy",
-          {
-            locale: pt,
-          }
+          "MMMM dd',' yyyy"
         );
       });
       setData(response.data);
@@ -59,7 +53,7 @@ export default function Grid() {
       subscription => subscription.id === id
     );
     swal({
-      text: `Do you want to delete the ${_subscription.student.name} student subscription?`,
+      text: `Do you want to delete ${_subscription.student.name} subscription?`,
       icon: 'warning',
       dangerMode: true,
       buttons: ['No', 'Yes'],

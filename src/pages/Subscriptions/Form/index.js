@@ -24,22 +24,20 @@ registerLocale('pt', pt);
 
 const schema = Yup.object().shape({
   student_id: Yup.number()
-    .typeError('Selecione um aluno')
+    .typeError('Select one student')
     .required(),
   plan_id: Yup.number()
-    .typeError('Selecione um plano typerror')
+    .typeError('Select one plan')
     .required(),
   start_date: Yup.date()
-    .typeError('Informe a data de início')
+    .typeError('Enter start date')
     .required(),
 });
 
 export default function EditForm({match}) {
-  // console.tron.log(match);
-
   const id = useMemo(() => match.params.id, [match.params]);
   const mode = id === undefined ? 'create' : 'update';
-  const titleMode = id === undefined ? 'Cadastro' : 'Edição';
+  const titleMode = id === undefined ? 'Registration' : 'Edition';
 
   const [plans, setPlans] = useState([]);
   const [record, setRecord] = useState(null);
@@ -54,7 +52,6 @@ export default function EditForm({match}) {
     if (id === undefined) return;
 
     async function loadRecord() {
-      console.tron.log('load subscription');
       try {
         const response = await api.get(`subscriptions/${id}`);
         const start_date = parseISO(response.data.start_date);
@@ -89,8 +86,8 @@ export default function EditForm({match}) {
       response.data.records.map(plan => {
         plan.title =
           plan.duration === 1
-            ? `${plan.title} (${plan.duration} mês)`
-            : `${plan.title} (${plan.duration} meses)`;
+            ? `${plan.title} (${plan.duration} month)`
+            : `${plan.title} (${plan.duration} months)`;
 
         plan.totalPriceFormatted = formatPrice(plan.price * plan.duration);
       });
@@ -100,14 +97,7 @@ export default function EditForm({match}) {
     loadPlans();
   }, []);
 
-  // useEffect(() => {
-  //   if (!selectedPlan || !startDate) return;
-
-  //   setEndDate(addMonths(startDate, selectedPlan.duration));
-  // }, [selectedPlan, startDate]);
-
   async function handleSubmit(data) {
-    console.tron.log('handleSubmit', data);
     const {student_id, plan_id, start_date} = data;
 
     try {
@@ -118,17 +108,15 @@ export default function EditForm({match}) {
       }
 
       toast.success(
-        `Cadastro ${mode === 'create' ? 'realizado' : 'atualizado'} com sucesso`
+        `Subscription successful  ${mode === 'create' ? 'created' : 'updated'}`
       );
       history.push('/subscriptions');
     } catch (error) {
-      console.tron.error(error);
-      toast.error('Falha no cadastro, revise os dados');
+      toast.error(error.response.data.error);
     }
   }
 
   async function loadStudents(inputValue) {
-    console.tron.log('loadStudents');
     const response = await api.get('students', {
       params: {q: inputValue, page: 1, limit: 100},
     });
@@ -156,7 +144,7 @@ export default function EditForm({match}) {
   return (
     <Container>
       <header>
-        <strong>{titleMode} de matrícula</strong>
+        <strong>Subscription {titleMode}</strong>
         <div>
           <aside>
             <SecondaryButton
@@ -165,25 +153,28 @@ export default function EditForm({match}) {
                 history.push('/subscriptions');
               }}>
               <MdKeyboardArrowLeft color="#fff" size={20} />
-              <span>VOLTAR</span>
+              <span>BACK</span>
             </SecondaryButton>
 
             <PrimaryButton type="submit" form="subscriptionForm">
               <MdAdd color="#fff" size={20} />
-              <span>SALVAR</span>
+              <span>SAVE</span>
             </PrimaryButton>
           </aside>
         </div>
       </header>
-      {/** onChange={e => setSelectedPlan(Number(e.target.value))} */}
 
-      <Form id="subscriptionForm" schema={schema} onSubmit={handleSubmit}>
+      <Form
+        id="subscriptionForm"
+        initialData={record}
+        schema={schema}
+        onSubmit={handleSubmit}>
         <AsyncSelect
           id="student_id"
           name="student_id"
-          placeholder="Selecione o aluno"
+          placeholder="Select one student"
           loadOptions={loadStudents}
-          label="ALUNO"
+          label="STUDENT"
           value={selectedStudent}
           onChange={setSelectedStudent}
         />
@@ -192,39 +183,35 @@ export default function EditForm({match}) {
             <tr>
               <td>
                 <Select
-                  placeholder="Selecione o plano"
+                  placeholder="Select one plan"
                   name="plan_id"
                   options={plans}
-                  label="PLANO"
+                  label="PLAN"
                   onChange={setSelectedPlan}
                   value={selectedPlan}
                 />
               </td>
               <td>
                 <DatePicker
-                  dateFormat="dd/MM/yyyy"
                   name="start_date"
                   selected={startDate}
                   onChange={date => setStartDate(date)}
-                  locale="pt"
-                  label="DATA DE INÍCIO"
+                  label="START DATE"
                 />
               </td>
               <td>
                 <DatePicker
-                  dateFormat="dd/MM/yyyy"
                   name="end_date"
                   selected={endDate}
                   disabled
-                  locale="pt"
                   className="disableInput"
-                  label="DATA DE TÉRMINO"
+                  label="END DATE"
                 />
               </td>
               <td>
                 <Input
                   name="totalPriceFormatted"
-                  label="VALOR FINAL"
+                  label="FINAL PRICE"
                   disabled
                   className="disableInput"
                   value={totalPriceFormatted}

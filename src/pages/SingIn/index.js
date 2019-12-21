@@ -26,18 +26,16 @@ export default function SingIn() {
         <Input
           name="email"
           type="email"
-          placeholder="exemplo@gmail.com.br"
-          label="SEU E-MAIL"
+          placeholder="user@gmail.com"
+          label="YOUR E-MAIL"
         />
         <Input
           name="password"
           type="password"
           placeholder="**********"
-          label="SUA SENHA"
+          label="YOUR PASSWORD"
         />
-        <button type="submit">
-          {loading ? 'Carregando...' : 'Entrar no sistema'}{' '}
-        </button>
+        <button type="submit">{loading ? 'Loading...' : 'Sign In'} </button>
       </Form>
     </>
   );

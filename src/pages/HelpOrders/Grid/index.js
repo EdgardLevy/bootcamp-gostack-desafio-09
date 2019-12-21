@@ -102,7 +102,7 @@ export default function Grid() {
         onFormSubmit={handleFormSubmit}
       />
       <header>
-        <strong>Pedidos de auxílio</strong>
+        <strong>Help Orders</strong>
       </header>
       <div className="totalRecords">
         <span>{`Total records: ${data.meta.total_records}`}</span>

@@ -25,8 +25,13 @@ const schema = Yup.object().shape({
 
 export default function EditForm({match}) {
   const id = useMemo(() => match.params.id, [match.params]);
-  const mode = id === undefined ? 'create' : 'update';
-  const titleMode = id === undefined ? 'Registration' : 'Edition';
+  const mode = useMemo(() => {
+    return id === undefined ? 'create' : 'update';
+  }, [id]);
+
+  const titleMode = useMemo(() => {
+    return id === undefined ? 'Registration' : 'Edition';
+  }, [id]);
 
   const [record, setRecord] = useState({});
   const [duration, setDuration] = useState(0);
@@ -34,7 +39,6 @@ export default function EditForm({match}) {
 
   useEffect(() => {
     if (id === undefined) return;
-    console.tron.log(id);
     async function loadRecord() {
       try {
         const response = await api.get(`plans/${id}`);
@@ -57,11 +61,11 @@ export default function EditForm({match}) {
         await api.put(`plans/${id}`, data);
       }
       toast.success(
-        `Cadastro ${mode === 'create' ? 'realizado' : 'atualizado'} com sucesso`
+        `Plan successful ${mode === 'create' ? 'created' : 'updated'}`
       );
       history.push('/plans');
     } catch (error) {
-      toast.error('Falha no cadastro, revise os dados');
+      toast.error(error.response.data.error);
     }
   }
 

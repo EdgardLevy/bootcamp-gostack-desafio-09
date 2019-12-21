@@ -1,4 +1,4 @@
-import React, {useState, useEffect} from 'react';
+import React, {useState, useEffect, useMemo} from 'react';
 import {MdAdd, MdKeyboardArrowLeft} from 'react-icons/md';
 import {Form, Input} from '@rocketseat/unform';
 import * as Yup from 'yup';
@@ -31,21 +31,24 @@ const schema = Yup.object().shape({
 });
 
 export default function EditForm({match}) {
-  console.tron.log(match);
-  const {id} = match.params;
-  const mode = id === undefined ? 'create' : 'update';
-  const titleMode = id === undefined ? 'Registration' : 'Edition';
+  const id = useMemo(() => match.params.id, [match.params]);
+  const mode = useMemo(() => {
+    return id === undefined ? 'create' : 'update';
+  }, [id]);
+
+  const titleMode = useMemo(() => {
+    return id === undefined ? 'Registration' : 'Edition';
+  }, [id]);
 
   const [record, setRecord] = useState(null);
 
   useEffect(() => {
     if (id === undefined) return;
-    console.tron.log(id);
+
     async function loadRecord() {
       try {
         const response = await api.get(`students/${id}`);
         setRecord(response.data);
-        console.tron.log(response);
       } catch (error) {
         console.tron.error(error);
       }
@@ -56,21 +59,18 @@ export default function EditForm({match}) {
 
   async function handleSubmit(data) {
     try {
-      // console.tron.log(mode);
-      // console.tron.log(data);
-
       if (mode === 'create') {
         await api.post('students', data);
       } else {
         await api.put(`students/${id}`, data);
       }
-      // console.tron.log(response);
+
       toast.success(
-        `Cadastro ${mode === 'create' ? 'realizado' : 'atualizado'} com sucesso`
+        `Student successful  ${mode === 'create' ? 'created' : 'updated'}`
       );
       history.push('/students');
     } catch (error) {
-      toast.error('Falha no cadastro, revise os dados');
+      toast.error(error.response.data.error);
     }
   }
 
